@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "is_demo": true,
+  "notice": "Dados fictícios para teste. Não publicar como ofertas reais.",
+  "client": {
+    "id": "demo-cliente-01",
+    "name": "Cafeteria Exemplo",
+    "niche": "cafeteria",
+    "audience": "Pessoas buscando uma pausa durante o dia",
+    "positioning": "próxima, acolhedora e organizada",
+    "palette": {"background": "#F7F1E7", "ink": "#29231F", "accent": "#77503D"},
+    "logo_path": "marca_demo.svg",
+    "approved_preferences": ["Fotos ou ilustrações honestas", "Uma mensagem principal por peça"],
+    "contact": null
+  },
+  "campaign": {
+    "id": "demo-campanha-01",
+    "name": "Demonstração de lote local",
+    "objective": "Validar produção e revisão de artes",
+    "direction_status": "draft",
+    "formats": ["feed_vertical", "story"]
+  },
+  "items": [
+    {"id": "demo-01", "template_family": "produto", "headline": "Uma pausa com sabor", "support": "Café preparado na hora", "cta": "Conheça o cardápio", "image_path": "produto_demo.svg", "expected_validation": "valid"},
+    {"id": "demo-02", "template_family": "servico", "headline": "Seu encontro começa aqui", "support": "Ambiente acolhedor para conversar", "cta": "Conheça o espaço", "image_path": "produto_demo.svg", "expected_validation": "valid"},
+    {"id": "demo-03", "template_family": "conteudo", "headline": "Cada café, uma história", "support": "Conteúdo demonstrativo sobre preparo", "cta": "Saiba mais", "image_path": "produto_demo.svg", "expected_validation": "valid"},
+    {"id": "demo-04", "template_family": "produto", "headline": "Falta a foto deste item", "support": "Linha para testar pendência", "cta": "Conheça", "image_path": null, "expected_validation": "blocked_missing_image"},
+    {"id": "demo-05", "template_family": "produto", "headline": "Este título intencionalmente comprido deve provocar uma revisão de encaixe para que nenhuma palavra seja ocultada no formato final", "support": "Teste de transbordamento", "cta": "Revise o texto", "image_path": "produto_demo.svg", "expected_validation": "check_text_overflow"}
+  ]
+}

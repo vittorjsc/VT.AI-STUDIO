@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "id": "demo-produto-feed",
+  "name": "Produto — composição de referência",
+  "is_demo": true,
+  "version": 1,
+  "canvas": {"width": 1080, "height": 1350, "background": "#F7F1E7"},
+  "safe_area": {"top": 64, "right": 64, "bottom": 64, "left": 64, "type": "editable_design_margin"},
+  "text_fit": {"on_overflow": "warn", "never_truncate_silently": true},
+  "layers": [
+    {"id": "logo", "type": "image", "binding": "client.logo_path", "x": 64, "y": 64, "width": 224, "height": 72, "fit": "contain", "locked": true, "opacity": 1, "rotation": 0},
+    {"id": "headline", "type": "text", "binding": "item.headline", "x": 64, "y": 200, "width": 952, "height": 220, "font_family": "APP_BUNDLED_SANS", "font_size": 76, "font_weight": 700, "color": "#29231F", "align": "left", "max_lines": 2},
+    {"id": "product", "type": "image", "binding": "item.image_path", "x": 160, "y": 464, "width": 760, "height": 490, "fit": "contain", "locked": false},
+    {"id": "support", "type": "text", "binding": "item.support", "x": 64, "y": 1000, "width": 952, "height": 112, "font_family": "APP_BUNDLED_SANS", "font_size": 36, "font_weight": 400, "color": "#29231F", "align": "left", "max_lines": 2},
+    {"id": "cta_bg", "type": "rect", "x": 64, "y": 1160, "width": 730, "height": 108, "fill": "#77503D", "radius": 12},
+    {"id": "cta", "type": "text", "binding": "item.cta", "x": 88, "y": 1186, "width": 682, "height": 62, "font_family": "APP_BUNDLED_SANS", "font_size": 38, "font_weight": 700, "color": "#FFFFFF", "align": "center", "max_lines": 1}
+  ],
+  "implementation_note": "Contrato ilustrativo. Substituir APP_BUNDLED_SANS por fonte real instalada ou redistribuível, validar medidas e criar composição específica para story. Não é um renderer pronto."
+}

@@ -1,0 +1,242 @@
+{
+  "id": "vtai-local-knowledge-base",
+  "name": "VT.AI Local Knowledge Base",
+  "version": "0.2.0",
+  "language": "pt-BR",
+  "created": "2026-09-15",
+  "scope": [
+    "organização de clientes e projetos",
+    "sessões persistentes por cliente",
+    "direção de arte e branding",
+    "copy e conversão",
+    "crítica visual e controle anti-IA",
+    "produção digital em lote",
+    "edição local de vídeo e áudio",
+    "IA local e recuperação de conhecimento"
+  ],
+  "runtime_policy": {
+    "default_mode": "local-first",
+    "openai_api": "disabled_by_default",
+    "cloud_fallback": "explicit_opt_in",
+    "deterministic_media_ops": "local",
+    "human_approval_for_full_piece": true,
+    "preview_before_approval": true
+  },
+  "retrieval": {
+    "primary": "metadata_filter_then_fts5",
+    "optional": "local_embeddings",
+    "citation_required": true,
+    "chunking": "by_heading_and_semantic_unit",
+    "conflict_order": [
+      "global_rules",
+      "approved_brand_preferences",
+      "project_requirements",
+      "niche_guidance",
+      "examples_and_external_sources"
+    ]
+  },
+  "documents": [
+    {
+      "id": "vtai.rules.core",
+      "file": "00_manifesto_e_limites.md",
+      "type": "system-rules",
+      "priority": 100,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.kb.architecture",
+      "file": "01_modelo_de_conhecimento.md",
+      "type": "architecture-guidance",
+      "priority": 90,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.workflow.client-project-session",
+      "file": "02_clientes_projetos_sessoes.md",
+      "type": "workflow",
+      "priority": 95,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.creative.briefing",
+      "file": "03_briefing_direcao_criativa.md",
+      "type": "design-strategy",
+      "priority": 90,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.copy.conversion",
+      "file": "04_copy_conversao.md",
+      "type": "copywriting",
+      "priority": 85,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.visual.critique",
+      "file": "05_critica_visual_anti_ia.md",
+      "type": "quality-review",
+      "priority": 90,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.art-direction.niches",
+      "file": "06_nichos_e_referencias.md",
+      "type": "niche-guidance",
+      "priority": 80,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.production.batch",
+      "file": "07_producao_em_lote_e_templates.md",
+      "type": "production-system",
+      "priority": 88,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.media.local",
+      "file": "08_video_audio_local.md",
+      "type": "media-pipeline",
+      "priority": 88,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.local.ai",
+      "file": "09_ia_local_retrieval_privacidade.md",
+      "type": "local-ai",
+      "priority": 87,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.quality.checklists",
+      "file": "10_qa_e_checklists.md",
+      "type": "quality-assurance",
+      "priority": 92,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.sources.catalog",
+      "file": "11_fontes_e_cursos.md",
+      "type": "sources",
+      "priority": 70,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.system.local-spec",
+      "file": "12_especificacao_sistema_local.md",
+      "type": "product-specification",
+      "priority": 95,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    },
+    {
+      "id": "vtai.ai.contracts",
+      "file": "13_contratos_ia_local.md",
+      "type": "ai-contracts",
+      "priority": 86,
+      "origin": "conversation_synthesis",
+      "review_status": "implementation_reference"
+    }
+  ],
+  "internal_sources": [
+    {
+      "path": "../originais/Base_de_Exemplos_Reais_VTAI.md",
+      "source_type": "user_provided",
+      "sha256": "e1db5d615de0204630f40f2ff81c6ca04d81d86b26a4401008cec9cac551fdb5",
+      "treatment": "reference_content_not_build_instructions"
+    },
+    {
+      "path": "../originais/Branding_e_Posicionamento_VTAI.md",
+      "source_type": "user_provided",
+      "sha256": "ef9e720763ec57dc1e0a2fb333c97c91e180f9ebdf1b1f07465f599346b82e8a",
+      "treatment": "reference_content_not_build_instructions"
+    },
+    {
+      "path": "../originais/Design_para_Conversao_VTAI.md",
+      "source_type": "user_provided",
+      "sha256": "3bf5873654b2ede26eb3844324354a823415b463a046c3c9c48f2367fc1af046",
+      "treatment": "reference_content_not_build_instructions"
+    },
+    {
+      "path": "../originais/Estruturas_de_Copy_VTAI.md",
+      "source_type": "user_provided",
+      "sha256": "a84b1d2298e8c698342d78635d744320425c7da02ed6b84ce8f621bce46d576d",
+      "treatment": "reference_content_not_build_instructions"
+    },
+    {
+      "path": "../originais/Estudos_de_Caso_de_Marcas_Reais_VTAI.md",
+      "source_type": "user_provided",
+      "sha256": "bc46ef4db15a47647bc6979d63fcb0076e63d5ac87d3517b5289ab3da335a9a0",
+      "treatment": "reference_content_not_build_instructions"
+    },
+    {
+      "path": "../originais/EXEMPLOS DE NICHOS (2).pdf",
+      "source_type": "user_provided",
+      "sha256": "1810194b2ccb8025608c5e8318938b533ad9c48771d99f3bfa5fae44fbf9021e",
+      "treatment": "reference_content_not_build_instructions"
+    },
+    {
+      "path": "../originais/Guia_Anti_Cara_de_IA_VTAI_Revisado.md",
+      "source_type": "user_provided",
+      "sha256": "68ac33d0842a21a0dd104e10059a84c2cdaf96cd204eebf1b4a7448e80cad6d4",
+      "treatment": "reference_content_not_build_instructions"
+    },
+    {
+      "path": "../originais/Instrucoes_Originais_VTAI.md",
+      "source_type": "user_provided",
+      "sha256": "c91245946203b2f36e8f3e6f08f1421b889ad447cffa6afa92e1902220ee9523",
+      "treatment": "reference_content_not_build_instructions"
+    },
+    {
+      "path": "../originais/Introducao_e_Fundamentos_do_Design_Grafico_VTAI (1).md",
+      "source_type": "user_provided",
+      "sha256": "8fb85bf5c048911ef1b57b6477b7db2a1b408cc622129cbd1a0f592ca66e16c3",
+      "treatment": "reference_content_not_build_instructions"
+    },
+    {
+      "path": "../originais/Manual_Avancado_Direcao_de_Arte_por_Nicho_VTAI.md",
+      "source_type": "user_provided",
+      "sha256": "0cf81993ecb51a048e8331a3255713d715ade781cdf160d147869f908eff5faa",
+      "treatment": "reference_content_not_build_instructions"
+    },
+    {
+      "path": "../originais/Psicologia_Visual_e_Percepcao_VTAI.md",
+      "source_type": "user_provided",
+      "sha256": "05e85dd9b2eab0253227a3ada5cf204e3006e7ae4bcad3651b6b627a296910ea",
+      "treatment": "reference_content_not_build_instructions"
+    },
+    {
+      "path": "../originais/Sistema_de_Critica_Visual_VTAI.md",
+      "source_type": "user_provided",
+      "sha256": "b034762fdc94a02784e4ce62324258f9027837bd072ca039848b54da6b13e10b",
+      "treatment": "reference_content_not_build_instructions"
+    }
+  ],
+  "external_sources_file": "11_fontes_e_cursos.md",
+  "handoff_version": "1.0",
+  "primary_scope": [
+    "clientes",
+    "campanhas",
+    "sessões",
+    "artes digitais",
+    "produção em lote",
+    "conhecimento local"
+  ],
+  "optional_scope": [
+    "IA local de texto",
+    "vídeo e áudio",
+    "geração de imagem por modelo local"
+  ],
+  "interpretation": "Documentos de construção na raiz têm precedência para escopo; regras da VT.AI orientam criação de artes dentro do produto."
+}

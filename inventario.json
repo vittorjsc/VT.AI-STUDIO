@@ -1,0 +1,223 @@
+{
+  "package": "VT_AI_Studio_Pacote_Codex_v1.0",
+  "created": "2026-09-15",
+  "count": 43,
+  "excludes_self": true,
+  "files": [
+    {
+      "path": "00_COMECE_AQUI.md",
+      "bytes": 2789,
+      "sha256": "81d43964ae14a6e93d60bcc70065cedea515e853c8e92259a2b7506b59e0e8ff"
+    },
+    {
+      "path": "01_PROMPT_PARA_CODEX.md",
+      "bytes": 5137,
+      "sha256": "841ff39f40a1560555302373d988350ce5880d6f5c590245b860a1de5f9e965c"
+    },
+    {
+      "path": "02_ESCOPO_E_TELAS.md",
+      "bytes": 5191,
+      "sha256": "1477b27fe8f52a9a2cb78395c1a528763b6c22644b79b51db26c658a1d9457c2"
+    },
+    {
+      "path": "03_ARQUITETURA_E_DADOS.md",
+      "bytes": 5309,
+      "sha256": "b7a9df1d27627d8c38d575e5dfff97100db08b7e73b6b898496bed62b63a3813"
+    },
+    {
+      "path": "04_CRITERIOS_DE_ACEITE.md",
+      "bytes": 3532,
+      "sha256": "7923b8674eedfb0c6cc2b26272656263110d1f032a03103f4d8fd233f4a014c4"
+    },
+    {
+      "path": "05_ORDEM_DE_IMPLEMENTACAO.md",
+      "bytes": 2242,
+      "sha256": "31e36722191464dfd34bdcb397f00dc2ed9b0516c1019363d82349215b13b159"
+    },
+    {
+      "path": "06_PROVENIENCIA_E_AJUSTES.md",
+      "bytes": 2692,
+      "sha256": "8fe1d63681212cd2a2733c8fc976f1313f9877227150e562d8f7f88ce1d6ec85"
+    },
+    {
+      "path": "conhecimento/00_manifesto_e_limites.md",
+      "bytes": 4206,
+      "sha256": "08426e9bb9cf0c7e0dc3913a1b42b6d1c25066117f9eba48a15d7cc9b81826ef"
+    },
+    {
+      "path": "conhecimento/01_modelo_de_conhecimento.md",
+      "bytes": 3729,
+      "sha256": "c791b999045c529ac42f7c185dfa5898c2c66f2ebbaa7b68b4d23e0112304cd3"
+    },
+    {
+      "path": "conhecimento/02_clientes_projetos_sessoes.md",
+      "bytes": 2951,
+      "sha256": "cefad9c7fa7e1a3ce6ce4605e807f08ce6a6c43a1b93afc4bf013ae031f80441"
+    },
+    {
+      "path": "conhecimento/03_briefing_direcao_criativa.md",
+      "bytes": 2320,
+      "sha256": "329bc8f55cf0f56629fc1e287f64432392ad84070135718539c98d2411bbeb58"
+    },
+    {
+      "path": "conhecimento/04_copy_conversao.md",
+      "bytes": 2192,
+      "sha256": "2616dbcada62fbe545d03ea0b7ce027647b6f7a7dde328f75a2f581b93910d6a"
+    },
+    {
+      "path": "conhecimento/05_critica_visual_anti_ia.md",
+      "bytes": 2313,
+      "sha256": "a079e140b5cbef2015c2bdd7948f59f0ccfde922be2ae9f0718b4155cc2ba819"
+    },
+    {
+      "path": "conhecimento/06_nichos_e_referencias.md",
+      "bytes": 2872,
+      "sha256": "2cb149ed6e32f2e8dc124867777e9ae69832ad5073eb5d8b49272b7c953c5c3e"
+    },
+    {
+      "path": "conhecimento/07_producao_em_lote_e_templates.md",
+      "bytes": 2152,
+      "sha256": "71a355ab7d4c418a391dc362ead0637504642e2fc6e763c5c89c0b05acb1d73d"
+    },
+    {
+      "path": "conhecimento/08_video_audio_local.md",
+      "bytes": 3561,
+      "sha256": "d449a2ace02f194b12941dc1bbee783d22f22756d90018774aae22bcf8cf155e"
+    },
+    {
+      "path": "conhecimento/09_ia_local_retrieval_privacidade.md",
+      "bytes": 2586,
+      "sha256": "6054057993eaad7316d76ab1c4ee9d2b4738103bb554eb2b144449407545b923"
+    },
+    {
+      "path": "conhecimento/10_qa_e_checklists.md",
+      "bytes": 1811,
+      "sha256": "ced84427740e063c1bfbe3b690d7a0248abd1f4104c78ddaa705bc208cb9c77a"
+    },
+    {
+      "path": "conhecimento/11_fontes_e_cursos.md",
+      "bytes": 5278,
+      "sha256": "c4208f88fbd9de63f5f6e5bf8d47e4d124ec690fca8c3626afc1b8615879d310"
+    },
+    {
+      "path": "conhecimento/12_especificacao_sistema_local.md",
+      "bytes": 3957,
+      "sha256": "186aceecea3ec0e874029b781774e6e0867729c42de46f97789a2a7e0d4ef5c4"
+    },
+    {
+      "path": "conhecimento/13_contratos_ia_local.md",
+      "bytes": 2609,
+      "sha256": "1f6baeacc58201e1e1996648e6765795b72c3031d847778aa10db0b469076936"
+    },
+    {
+      "path": "conhecimento/db_schema.sql",
+      "bytes": 6867,
+      "sha256": "7c02a77f69625446866b42d4b346adbb9bd2f9e05fb0107597cf9742ec4473fc"
+    },
+    {
+      "path": "conhecimento/kb_manifest.json",
+      "bytes": 8419,
+      "sha256": "a256005d52ebdc724b4c67e38a80a22c75d0b26d0c3d6bda600aabd1364c10c5"
+    },
+    {
+      "path": "conhecimento/README.md",
+      "bytes": 3854,
+      "sha256": "c1a4966747b0503aba8d9f0fea70a79de767af7851a8cab953ef52f702221ec3"
+    },
+    {
+      "path": "exemplos/cliente_e_lote.json",
+      "bytes": 2094,
+      "sha256": "cf20b1e951ca0abae5a29ae0e6803a995c79a3c788a1e981a30bed782e10a210"
+    },
+    {
+      "path": "exemplos/LEIA_ME.md",
+      "bytes": 1032,
+      "sha256": "cfd31a7dca49fa5532b57a9abd4430fdc67c4a48c4e6c0c2be9273ae0e03ba69"
+    },
+    {
+      "path": "exemplos/marca_demo.svg",
+      "bytes": 262,
+      "sha256": "6f18bd69eae86b9fc8d537b71f5604d0f5ad91c20a682dc9c03ed569cf5b0eb2"
+    },
+    {
+      "path": "exemplos/produto_demo.svg",
+      "bytes": 614,
+      "sha256": "8a33e3da1c01824d6e25c7f757851cf09d0adc8edb2615da68fcbf5f178aa84f"
+    },
+    {
+      "path": "exemplos/template_cena.json",
+      "bytes": 1785,
+      "sha256": "cd377a5810935d1a2f5018e88abd032c1c5312d51f50e0bff3ce3c6a9c3f1fed"
+    },
+    {
+      "path": "originais/Base_de_Exemplos_Reais_VTAI.md",
+      "bytes": 40925,
+      "sha256": "e1db5d615de0204630f40f2ff81c6ca04d81d86b26a4401008cec9cac551fdb5"
+    },
+    {
+      "path": "originais/Branding_e_Posicionamento_VTAI.md",
+      "bytes": 37375,
+      "sha256": "ef9e720763ec57dc1e0a2fb333c97c91e180f9ebdf1b1f07465f599346b82e8a"
+    },
+    {
+      "path": "originais/Design_para_Conversao_VTAI.md",
+      "bytes": 25325,
+      "sha256": "3bf5873654b2ede26eb3844324354a823415b463a046c3c9c48f2367fc1af046"
+    },
+    {
+      "path": "originais/Estruturas_de_Copy_VTAI.md",
+      "bytes": 35773,
+      "sha256": "a84b1d2298e8c698342d78635d744320425c7da02ed6b84ce8f621bce46d576d"
+    },
+    {
+      "path": "originais/Estudos_de_Caso_de_Marcas_Reais_VTAI.md",
+      "bytes": 30912,
+      "sha256": "bc46ef4db15a47647bc6979d63fcb0076e63d5ac87d3517b5289ab3da335a9a0"
+    },
+    {
+      "path": "originais/EXEMPLOS DE NICHOS (2).pdf",
+      "bytes": 61542356,
+      "sha256": "1810194b2ccb8025608c5e8318938b533ad9c48771d99f3bfa5fae44fbf9021e"
+    },
+    {
+      "path": "originais/Guia_Anti_Cara_de_IA_VTAI_Revisado.md",
+      "bytes": 26240,
+      "sha256": "68ac33d0842a21a0dd104e10059a84c2cdaf96cd204eebf1b4a7448e80cad6d4"
+    },
+    {
+      "path": "originais/Instrucoes_Originais_VTAI.md",
+      "bytes": 8356,
+      "sha256": "c91245946203b2f36e8f3e6f08f1421b889ad447cffa6afa92e1902220ee9523"
+    },
+    {
+      "path": "originais/Introducao_e_Fundamentos_do_Design_Grafico_VTAI (1).md",
+      "bytes": 42670,
+      "sha256": "8fb85bf5c048911ef1b57b6477b7db2a1b408cc622129cbd1a0f592ca66e16c3"
+    },
+    {
+      "path": "originais/Manual_Avancado_Direcao_de_Arte_por_Nicho_VTAI.md",
+      "bytes": 37145,
+      "sha256": "0cf81993ecb51a048e8331a3255713d715ade781cdf160d147869f908eff5faa"
+    },
+    {
+      "path": "originais/Psicologia_Visual_e_Percepcao_VTAI.md",
+      "bytes": 26478,
+      "sha256": "05e85dd9b2eab0253227a3ada5cf204e3006e7ae4bcad3651b6b627a296910ea"
+    },
+    {
+      "path": "originais/Sistema_de_Critica_Visual_VTAI.md",
+      "bytes": 33472,
+      "sha256": "b034762fdc94a02784e4ce62324258f9027837bd072ca039848b54da6b13e10b"
+    },
+    {
+      "path": "verificacao/RESULTADO.md",
+      "bytes": 1489,
+      "sha256": "93c9ed3119f3362abe9fe6dc86de8f4cf99cb1367d69fdd66776ed45c5a9b49e"
+    },
+    {
+      "path": "verificacao/verificar_referencia.py",
+      "bytes": 5245,
+      "sha256": "95ed06481afd2223078dc07f0a8f5777ca615670083047b819d4a8f2c9ed6b5b"
+    }
+  ]
+}
