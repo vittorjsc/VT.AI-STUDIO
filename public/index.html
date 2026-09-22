@@ -1,1 +1,34 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VT.AI Studio</title><link rel="stylesheet" href="style.css"></head><body><aside><div class="brand">VT.<i>AI</i><small>STUDIO · NUKELABS</small></div><nav><button data-page="create">Criar arte</button><button data-page="dashboard">Visão geral</button><button data-page="clients">Clientes</button><button data-page="knowledge">Conhecimento</button><button data-page="settings">Configurações</button></nav><div class="offline">● Dados locais</div></aside><main><header><div><p id="eyebrow">VT.AI STUDIO</p><h1 id="title">Criar arte com IA</h1></div><div><button class="theme-toggle" id="themeToggle">Tema claro</button><button class="primary" id="quick">+ Novo cliente</button></div></header><section id="app"></section></main><dialog id="modal"><form method="dialog" id="form"><button class="close" value="cancel">×</button><div id="formContent"></div><menu><button value="cancel">Cancelar</button><button class="primary" id="submit" value="default">Salvar</button></menu></form></dialog><div id="toast"></div><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VT.AI Studio</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="creative.css">
+</head>
+<body>
+  <aside>
+    <div class="brand">VT.<i>AI</i><small>STUDIO · NUKELABS</small></div>
+    <nav>
+      <button data-page="create">Criar arte</button>
+      <button data-page="dashboard">Visão geral</button>
+      <button data-page="clients">Clientes</button>
+      <button data-page="knowledge">Conhecimento</button>
+      <button data-page="settings">Configurações</button>
+    </nav>
+    <div class="offline">● Dados locais</div>
+  </aside>
+  <main>
+    <header>
+      <div><p id="eyebrow">VT.AI STUDIO</p><h1 id="title">Criar arte com IA</h1></div>
+      <div><button class="theme-toggle" id="themeToggle">Tema claro</button><button class="primary" id="quick">+ Novo cliente</button></div>
+    </header>
+    <section id="app"></section>
+  </main>
+  <dialog id="modal"><form method="dialog" id="form"><button class="close" value="cancel">×</button><div id="formContent"></div><menu><button value="cancel">Cancelar</button><button class="primary" id="submit" value="default">Salvar</button></menu></form></dialog>
+  <div id="toast"></div>
+  <script src="creative.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

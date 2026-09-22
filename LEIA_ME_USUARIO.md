@@ -4,9 +4,11 @@ Aplicativo local para Windows, em português, com criação de artes por convers
 
 ## Geração de arte por referência
 
-Na tela **Criar arte**, cole uma referência/logo com `Ctrl + V` ou use o botão **+** para enviar um arquivo. Descreva a arte desejada e escolha **Feed** (1080 × 1350) ou **Story** (1080 × 1920). O aplicativo envia os anexos e o pedido ao GPT Image 2 somente depois que você clicar em **Gerar arte**; a chave nunca é enviada ao navegador ou gravada no projeto.
+Na tela **Criar arte**, cole uma referência/logo com `Ctrl + V` ou use o botão **+** para enviar um arquivo. Identifique se cada anexo é referência, logo ou produto. Descreva a arte desejada e escolha **Feed** (1080 × 1350) ou **Story** (1080 × 1920). Clique em **Preparar direção criativa** para a VT.AI analisar o pedido e propor conceito, composição e paleta antes da imagem. Revise os campos e clique em **Aprovar e gerar arte**. Se preferir, **Gerar direto** pula essa etapa.
 
-Depois de gerar, use **Gerar para Story** ou **Gerar para Feed** para criar a versão correspondente da mesma arte. A conversão recompõe a peça para o novo formato — não apenas estica a imagem. O botão **Baixar PNG** entrega o arquivo nas dimensões finais do formato escolhido.
+Textos encontrados literalmente no pedido podem entrar nos campos aprovados. Ideias novas aparecem como sugestões separadas: só entram na arte se você clicar em **Usar sugestão** ou digitá-las nos campos. Não trate a análise como substituta da conferência final. O briefing, a geração e a revisão por IA usam créditos da API. A chave nunca é enviada ao navegador nem gravada no projeto.
+
+Depois de gerar, a VT.AI faz uma revisão visual e aponta problemas perceptíveis de texto, hierarquia, logo e excesso de elementos. Use **Gerar para Story** ou **Gerar para Feed** para criar a versão correspondente da mesma arte. A conversão recompõe a peça para o novo formato — não apenas estica a imagem. Para alterar um detalhe, clique em **Editar esta arte**, arraste sobre a região desejada e descreva a mudança. A imagem original permanece no histórico. O botão **Baixar PNG** entrega o arquivo nas dimensões finais do formato escolhido.
 
 O direcionamento da VT.AI privilegia uma peça limpa e intencional: não inventa telefone, endereço, preço, slogans, selos, frases de preenchimento ou ícones decorativos. Para um resultado melhor, escreva no pedido somente os textos e informações que realmente devem aparecer.
 
@@ -24,14 +26,14 @@ Feche e abra o VT.AI Studio após executar esse comando. A geração usa crédit
 2. Use esse atalho para abrir o VT.AI Studio. O navegador abrirá em `http://127.0.0.1:4173` e o serviço aceita conexões apenas deste computador.
 3. Para encerrar, feche a janela preta aberta pelo atalho. Se fechar apenas o navegador, seus dados continuam salvos.
 
-Requisito: Node.js 22.5 ou superior. Não há instalação de pacotes nem chamadas pagas de IA.
+Requisito: Node.js 22.5 ou superior. Não há instalação de pacotes. Análise, geração, edição, adaptação e revisão com IA consomem créditos da API.
 
 ## Primeiro uso
 
 1. Em **Criar arte**, cole ou envie uma referência e a logo da empresa.
 2. Escreva o pedido com o objetivo, os textos exatos, a marca e o estilo desejado.
-3. Escolha **Feed** ou **Story** e clique em **Gerar arte**.
-4. Caso precise mudar texto ou elemento, use **Editar esta arte**. A original é preservada no histórico.
+3. Escolha **Feed** ou **Story**, prepare e revise a direção criativa, e clique em **Aprovar e gerar arte**. Você também pode usar **Gerar direto**.
+4. Confira a revisão visual. Caso precise mudar texto ou elemento, use **Editar esta arte** e, se necessário, marque a área a alterar. A original é preservada no histórico.
 5. Se a campanha também precisar do outro formato, use **Gerar para Story** ou **Gerar para Feed** na arte final.
 
 ## Dados, backup e limites
