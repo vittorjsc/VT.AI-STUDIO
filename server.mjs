@@ -54,6 +54,32 @@ function safeImage(data, index){
   if(bytes.length>10*1024*1024) throw Error('Cada imagem deve ter no máximo 10 MB.');
   return {blob:new Blob([bytes],{type:hit[1]}),name:(data.name||`imagem-${index}.png`).replace(/[^\w. -]/g,'_'),type:hit[1]};
 }
+function networkCode(error){
+  if(error?.name==='TimeoutError') return 'TIMEOUT';
+  const code=error?.cause?.code;
+  return ['EACCES','EPERM','ENOTFOUND','EAI_AGAIN','ECONNRESET','ECONNREFUSED','ETIMEDOUT','UND_ERR_SOCKET'].includes(code)?code:'NETWORK_ERROR';
+}
+async function openaiImageRequest(form,key){
+  try {
+    return await fetch('https://api.openai.com/v1/images/edits',{method:'POST',headers:{Authorization:`Bearer ${key}`},body:form,signal:AbortSignal.timeout(300000)});
+  } catch(error) {
+    const code=networkCode(error);
+    const detail=code==='EACCES'||code==='EPERM'?'O acesso à internet foi bloqueado para o servidor. Reinicie o VT.AI Studio pelo atalho e confira o firewall.':code==='TIMEOUT'||code==='ETIMEDOUT'?'A conexão demorou demais. Verifique a internet e tente novamente.':'Verifique a conexão, o proxy ou o firewall e tente novamente.';
+    const failure=new Error(`Não foi possível conectar à API OpenAI (${code}). ${detail}`);
+    failure.status=502;
+    throw failure;
+  }
+}
+async function openaiStatus(){
+  const key=process.env.OPENAI_API_KEY;
+  if(!key) return {configured:false,connected:false};
+  try {
+    const response=await fetch('https://api.openai.com/v1/models',{headers:{Authorization:`Bearer ${key}`},signal:AbortSignal.timeout(10000)});
+    return {configured:true,connected:true,authorized:response.ok,httpStatus:response.status};
+  } catch(error) {
+    return {configured:true,connected:false,code:networkCode(error)};
+  }
+}
 async function generateArt(body){
   const key=process.env.OPENAI_API_KEY;
   if(!key) throw Error('OPENAI_API_KEY não foi encontrada. Feche e reabra o VT.AI Studio após definir a variável.');
@@ -69,7 +95,7 @@ POLÍTICA ANTI-ARTE-GENÉRICA: a peça deve comunicar um único objetivo. Use so
 Pedido do usuário: ${prompt}`;
   const form=new FormData(); form.set('model','gpt-image-2'); form.set('prompt',brief); form.set('size',size); form.set('quality','high'); form.set('output_format','png');
   for(const image of images) form.append('image[]',image.blob,image.name);
-  const apiResponse=await fetch('https://api.openai.com/v1/images/edits',{method:'POST',headers:{Authorization:`Bearer ${key}`},body:form});
+  const apiResponse=await openaiImageRequest(form,key);
   const result=await apiResponse.json(); if(!apiResponse.ok) throw Error(result?.error?.message||'A geração de imagem falhou.');
   const b64=result?.data?.[0]?.b64_json; if(!b64) throw Error('A API não retornou uma imagem.');
   const gid=id(), file=`gerada-${gid}.png`, relative=path.join('assets',file); fs.writeFileSync(path.join(dataDir,relative),Buffer.from(b64,'base64'));
@@ -83,7 +109,7 @@ async function editGeneratedArt(body){
   const full=path.resolve(dataDir,source.output_path);if(!full.startsWith(path.resolve(dataDir,'assets'))||!fs.existsSync(full))throw Error('O arquivo da arte original não está disponível.');
   const format=source.format==='story'?'story':'feed',size=format==='story'?'1088x1936':'1088x1360';
   const form=new FormData();form.set('model','gpt-image-2');form.set('prompt',`Edite a arte fornecida conforme o pedido abaixo. Preserve todos os elementos, composição, identidade visual e textos que não foram citados. Aplique somente a alteração solicitada, mantendo a arte final vertical, legível e sem marca d'água. Não invente textos, contatos, ícones ou frases promocionais. Mantenha a proporção e a área segura próprias do formato ${format==='story'?'Story 1080×1920':'Feed 1080×1350'}. Pedido de edição: ${request}`);form.set('size',size);form.set('quality','high');form.set('output_format','png');form.append('image[]',new Blob([fs.readFileSync(full)],{type:'image/png'}),'arte-original.png');
-  const apiResponse=await fetch('https://api.openai.com/v1/images/edits',{method:'POST',headers:{Authorization:`Bearer ${key}`},body:form});const result=await apiResponse.json();if(!apiResponse.ok)throw Error(result?.error?.message||'A edição da arte falhou.');const b64=result?.data?.[0]?.b64_json;if(!b64)throw Error('A API não retornou uma imagem editada.');
+  const apiResponse=await openaiImageRequest(form,key);const result=await apiResponse.json();if(!apiResponse.ok)throw Error(result?.error?.message||'A edição da arte falhou.');const b64=result?.data?.[0]?.b64_json;if(!b64)throw Error('A API não retornou uma imagem editada.');
   const gid=id(),file=`editada-${gid}.png`,relative=path.join('assets',file);fs.writeFileSync(path.join(dataDir,relative),Buffer.from(b64,'base64'));run('INSERT INTO generations(id,prompt,assets_json,output_path,status,created_at,format) VALUES(?,?,?,?,?,?,?)',gid,`Edição de ${source.id}: ${request}`,JSON.stringify([path.basename(source.output_path)]),relative,'done',now(),format);return {id:gid,url:`/files/${encodeURIComponent(relative.replace(/\\/g,'/'))}`,file,created_at:now(),parent_id:source.id,format};
 }
 async function adaptGeneratedArt(body){
@@ -94,12 +120,13 @@ async function adaptGeneratedArt(body){
   const target=targetFormat==='story'?'Story 1080×1920':'Feed vertical 1080×1350',size=targetFormat==='story'?'1088x1936':'1088x1360';
   const instruction=targetFormat==='story'?'Expanda verticalmente apenas o fundo, cenário, textura e elementos secundários. Mantenha a composição principal, logo, textos, produto e CTA em escala e posição coerentes, com respiro superior e inferior para a interface do Story.':'Recomponha para o recorte 4:5 preservando integralmente logo, headline, produto, oferta e CTA. Não comprima todos os elementos; mantenha espaço negativo e elimine somente detalhes secundários fora da área útil.';
   const form=new FormData();form.set('model','gpt-image-2');form.set('prompt',`Adapte esta arte existente para ${target}. ${instruction} Não estique, não deforme, não recrie a identidade visual e não invente novos textos, frases, ícones, ofertas, dados de contato ou elementos promocionais. Preserve apenas os textos e elementos já presentes na imagem de origem. Resultado com aparência editorial, limpa e profissional.`);form.set('size',size);form.set('quality','high');form.set('output_format','png');form.append('image[]',new Blob([fs.readFileSync(full)],{type:'image/png'}),'arte-origem.png');
-  const response=await fetch('https://api.openai.com/v1/images/edits',{method:'POST',headers:{Authorization:`Bearer ${key}`},body:form});const result=await response.json();if(!response.ok)throw Error(result?.error?.message||'A adaptação de formato falhou.');const b64=result?.data?.[0]?.b64_json;if(!b64)throw Error('A API não retornou uma arte adaptada.');
+  const response=await openaiImageRequest(form,key);const result=await response.json();if(!response.ok)throw Error(result?.error?.message||'A adaptação de formato falhou.');const b64=result?.data?.[0]?.b64_json;if(!b64)throw Error('A API não retornou uma arte adaptada.');
   const gid=id(),file=`${targetFormat}-${gid}.png`,relative=path.join('assets',file);fs.writeFileSync(path.join(dataDir,relative),Buffer.from(b64,'base64'));run('INSERT INTO generations(id,prompt,assets_json,output_path,status,created_at,format) VALUES(?,?,?,?,?,?,?)',gid,`Adaptação ${sourceFormat} → ${targetFormat} de ${source.id}`,JSON.stringify([path.basename(source.output_path)]),relative,'done',now(),targetFormat);return {id:gid,url:`/files/${encodeURIComponent(relative.replace(/\\/g,'/'))}`,file,created_at:now(),parent_id:source.id,format:targetFormat};
 }
 seed();
 const handlers={
  'GET /api/health':()=>({ok:true,dataDir,version:'1.0.0'}),
+ 'GET /api/openai/status':()=>openaiStatus(),
  'GET /api/generations':()=>q('SELECT * FROM generations ORDER BY created_at DESC LIMIT 24').map(x=>({...x,url:x.output_path?`/files/${encodeURIComponent(x.output_path.replace(/\\/g,'/'))}`:null,assets:json(x.assets_json,[])})),
  'GET /api/clients':()=>q("SELECT * FROM clients WHERE status!='archived' ORDER BY name").map(client),
  'GET /api/projects':()=>q('SELECT p.*,c.name client_name FROM projects p JOIN clients c ON c.id=p.client_id ORDER BY p.updated_at DESC').map(project),
@@ -119,4 +146,4 @@ const handlers={
  'POST /api/backup':()=>{const out=path.join(dataDir,'backups',`backup-${now().replace(/[:.]/g,'-')}.sqlite`); db.exec('PRAGMA wal_checkpoint(TRUNCATE)'); fs.copyFileSync(path.join(dataDir,'studio.sqlite'),out); return {file:path.basename(out)}},
  'POST /api/restore':b=>{const f=path.join(dataDir,'backups',path.basename(b.file||''));if(!fs.existsSync(f))throw Error('Backup não encontrado.');db.close();fs.copyFileSync(f,path.join(dataDir,'studio.sqlite'));return {restart:true}},
 };
-http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://127.0.0.1');if(req.method==='GET'&&url.pathname.startsWith('/files/')){const requested=decodeURIComponent(url.pathname.slice(7));const full=path.resolve(dataDir,requested);if(!full.startsWith(path.resolve(dataDir,'assets'))||!fs.existsSync(full))return reply(res,404,'Não encontrado','text/plain');return reply(res,200,fs.readFileSync(full),'image/png')}if(req.method==='GET'&&!url.pathname.startsWith('/api/')){let file=url.pathname==='/'?'index.html':url.pathname.slice(1);file=path.normalize(file);const full=path.join(publicDir,file);if(!full.startsWith(publicDir)||!fs.existsSync(full))return reply(res,404,'Não encontrado','text/plain');const ext=path.extname(full);return reply(res,200,fs.readFileSync(full),ext==='.js'?'text/javascript':ext==='.css'?'text/css':'text/html')}const key=`${req.method} ${url.pathname}`;const h=handlers[key];if(!h)return reply(res,404,{error:'Rota não encontrada'});let raw='';for await(const c of req)raw+=c;const result=await h(raw?JSON.parse(raw):{},url);reply(res,200,result)}catch(e){reply(res,400,{error:e.message||'Erro interno'})}}).listen(4173,'127.0.0.1',()=>console.log('VT.AI Studio: http://127.0.0.1:4173'));
+http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://127.0.0.1');if(req.method==='GET'&&url.pathname.startsWith('/files/')){const requested=decodeURIComponent(url.pathname.slice(7));const full=path.resolve(dataDir,requested);if(!full.startsWith(path.resolve(dataDir,'assets'))||!fs.existsSync(full))return reply(res,404,'Não encontrado','text/plain');return reply(res,200,fs.readFileSync(full),'image/png')}if(req.method==='GET'&&!url.pathname.startsWith('/api/')){let file=url.pathname==='/'?'index.html':url.pathname.slice(1);file=path.normalize(file);const full=path.join(publicDir,file);if(!full.startsWith(publicDir)||!fs.existsSync(full))return reply(res,404,'Não encontrado','text/plain');const ext=path.extname(full);return reply(res,200,fs.readFileSync(full),ext==='.js'?'text/javascript':ext==='.css'?'text/css':'text/html')}const key=`${req.method} ${url.pathname}`;const h=handlers[key];if(!h)return reply(res,404,{error:'Rota não encontrada'});let raw='';for await(const c of req)raw+=c;const result=await h(raw?JSON.parse(raw):{},url);reply(res,200,result)}catch(e){reply(res,e.status||400,{error:e.message||'Erro interno'})}}).listen(4173,'127.0.0.1',()=>console.log('VT.AI Studio: http://127.0.0.1:4173'));
