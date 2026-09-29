@@ -9,7 +9,7 @@ import {briefSchema,reviewSchema,normalizeBrief,normalizeReview,selectKnowledge,
 
 const png='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aizsAAAAASUVORK5CYII=';
 const image=(kind='logo')=>({name:'marca-ficticia.png',kind,data:'data:image/png;base64,'+png});
-const plan=()=>({...Object.fromEntries(Object.entries(briefSchema.properties).filter(([,schema])=>schema.type==='string').map(([name])=>[name,''])),objective:'Relacionamento com clientes',concept:'Acolhimento com foco no café',visual_direction:'Fotografia natural com luz lateral',headline:'Feliz Dia do Cliente',copy_origin:{headline:'tematica',support:'vazio',cta:'vazio'},facts:[],alerts:[]});
+const plan=()=>({...Object.fromEntries(Object.entries(briefSchema.properties).filter(([,schema])=>schema.type==='string').map(([name])=>[name,''])),objective:'Relacionamento com clientes',concept:'Acolhimento com foco no café',visual_direction:'Fotografia natural com luz lateral',main_subject:'Xícara ilustrativa em uma mesa acolhedora',visual_rationale:'A imagem comunica o contexto da cafeteria, sem uma oferta inventada.',visual_elements:[{element:'Xícara ilustrativa',role:'principal',purpose:'Comunicar o tema café',treatment:'Cerâmica e luz lateral suave',placement:'Abaixo do título, integrada à mesa'}],headline:'Feliz Dia do Cliente',copy_origin:{headline:'tematica',support:'vazio',cta:'vazio'},facts:[],alerts:[]});
 const review=()=>({score:9,decision:'publicavel',problems:[],criteria:['conteudo','hierarquia','marca_produto','legibilidade','acabamento'].map(name=>({name,score:4,evidence:'Elemento visível e coerente.',uncertain:false})),strengths:['Mensagem dominante'],suggested_fix:''});
 function fixture(t,options={}){
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'vt-ai-test-'));fs.mkdirSync(path.join(dir,'assets'));
@@ -120,4 +120,22 @@ test('chave ausente e falha de rede são claras e nunca repetem cobrança automa
 });
 test('prompt final tem proporção, área segura e copy aprovada',()=>{
   const output=renderPrompt('Dia do Cliente',plan(),[image()],'story');assert.match(output,/y=250/);assert.match(output,/Feliz Dia do Cliente/);assert.match(output,/não exigir que estejam no pedido original/);
+});
+test('elemento visual inferido não é removido por não estar literalmente no pedido',()=>{
+  const raw=plan();raw.visual_elements=[{element:'Coração ilustrativo tridimensional',role:'principal',purpose:'Comunicar afeto na homenagem ao cliente',treatment:'Volume verde translúcido com luz coerente',placement:'Entre o título e a logo'}];
+  const normalized=normalizeBrief(raw,{prompt:'Dia do Cliente para uma marca fictícia.',brand:null});
+  assert.equal(normalized.visual_elements.length,1);assert.equal(normalized.visual_elements[0].element,'Coração ilustrativo tridimensional');assert.equal(normalized.facts.length,0);
+  const prompt=renderPrompt('Dia do Cliente',normalized,[],'feed');assert.match(prompt,/Coração ilustrativo tridimensional/);assert.match(prompt,/não os remova só porque o usuário não os enumerou/);assert.match(prompt,/não precisam ser a única imagem|não precisa ser a única imagem/);
+});
+test('liberdade chega ao planejador, gerador e revisão sem relaxar fidelidade ou copy',async t=>{
+  const {engine,calls}=fixture(t);const art=await engine.generate(body());
+  const planning=JSON.parse(calls[0].config.body);assert.match(planning.instructions,/LIBERDADE VISUAL/);assert.match(planning.instructions,/visual_elements/);
+  const prompt=calls[1].config.body.get('prompt');assert.match(prompt,/Xícara ilustrativa/);assert.match(prompt,/Cerâmica e luz lateral suave/);assert.match(prompt,/Não invente preços/);assert.match(prompt,/ativos fixos/);
+  await engine.review({generation_id:art.id});assert.match(JSON.parse(calls[2].config.body).instructions,/não os classifique como excesso só por existirem/);
+});
+test('direção avançada pode alterar assunto visual; pedidos só tipográficos permanecem válidos',async t=>{
+  const {engine,calls}=fixture(t);const input=body(),briefing=await engine.prepare(input);briefing.main_subject='Somente composição tipográfica, sem fotografia';briefing.background='Fundo liso';
+  const art=await engine.generate({...input,briefing});assert.equal(art.brief.main_subject,briefing.main_subject);assert.match(calls[1].config.body.get('prompt'),/a direção editada tem prioridade/);
+  const raw=plan();raw.visual_elements=[];raw.main_subject='Somente tipografia';raw.visual_rationale='Pedido explícito de só texto.';
+  assert.deepEqual(normalizeBrief(raw,{prompt:'Uma arte só tipográfica, sem elementos adicionais.',brand:null}).visual_elements,[]);
 });

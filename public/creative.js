@@ -24,7 +24,8 @@ function creativeBriefView(){
     <details class="brief-details"><summary>Objetivo, conceito e composição</summary>
       ${field('objective','Objetivo')}${field('audience','Público')}${field('positioning','Posicionamento')}
       ${field('concept','Conceito','textarea')}${field('visual_direction','Direção visual','textarea')}${field('layout','Composição','textarea')}${field('palette','Paleta')}
-      <p class="muted">Referência: ${esc(brief.reference_strategy||'Sem referência visual.')}</p>
+      ${field('main_subject','Imagem ou elemento principal','textarea')}${field('background','Fundo e cenário','textarea')}${field('typography','Tipografia')}${field('density','Densidade visual')}${field('reference_strategy','Como usar a referência','textarea')}${field('visual_rationale','Intenção da ideia visual','textarea')}
+      ${brief.visual_elements?.length?`<div class="visual-plan"><strong>Elementos propostos pela VT.AI</strong>${brief.visual_elements.map(item=>`<p><strong>${esc(item.element)}</strong> · ${esc(item.purpose)}<br><span class="muted">${esc(item.treatment)} · ${esc(item.placement)}</span></p>`).join('')}</div>`:''}
     </details>
     <h3>Textos finais da arte</h3><p class="muted">Campos vazios ficam sem texto. Um título temático pode ser preparado automaticamente; preços e dados comerciais precisam estar confirmados.</p>
     ${field('headline','Título principal')}${creativeSuggestion('headline','título')}
@@ -71,7 +72,7 @@ function creativeView(){
   const active=creativeActiveArt(),question=state.briefing?.clarification;
   return `<div class="create-grid"><div class="panel" id="creativeComposer">
     <div class="section-heading"><div><p class="kicker">Criação intuitiva</p><h2>O que vamos criar?</h2></div><span class="pill ok">AUTO</span></div>
-    <p class="muted">Descreva em poucas palavras. A VT.AI planeja a direção e a composição para você.</p>
+    <p class="muted">Descreva em poucas palavras. A VT.AI propõe a ideia visual, imagens e elementos pertinentes — você não precisa listar cada detalhe.</p>
     <label>Marca — opcional</label><select id="creativeClient"><option value="">Sem perfil · usar pedido e anexos</option>${state.clients.map(client=>`<option value="${client.id}" ${state.clientId===client.id?'selected':''}>${esc(client.name)}</option>`).join('')}</select>
     <p class="muted creative-cost">Usa somente o contexto da marca escolhida. Configure tom e preferências em Clientes.</p>
     <div class="paste-zone" contenteditable="true" role="textbox" aria-label="Colar imagem" tabindex="0" onpaste="creativePasteImage(event)">

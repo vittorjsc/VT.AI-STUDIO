@@ -1,4 +1,4 @@
-# VT.AI Studio by NUKELABS · 1.1
+# VT.AI Studio by NUKELABS · 1.1.1
 
 Aplicativo local para Windows que transforma pedidos simples em artes para redes sociais. Interface em português, verde, com tema claro/escuro.
 
@@ -13,9 +13,11 @@ Aplicativo local para Windows que transforma pedidos simples em artes para redes
 
 A direção privilegia foco, respiro, hierarquia e conteúdo intencional. Pode criar um título temático curto, mas não deve inventar preço, desconto, contato, prazo, garantia ou benefício. Forneça fatos comerciais quando precisarem aparecer. A IA ainda pode errar: confira texto, produto, logo e informações antes de publicar.
 
+A VT.AI tem liberdade para propor uma imagem principal, cena, fotografia ilustrativa, metáfora ou elemento 3D que comunique o tema, mesmo que você não descreva esses detalhes. Evitar excessos não significa eliminar imagens. Se quiser uma peça só tipográfica ou sem elementos adicionais, peça explicitamente. Fotografias criadas são ilustrativas; não são prova de resultado nem fotos de clientes/produtos reais não fornecidos.
+
 ## Direção criativa avançada
 
-Abra **Quero controlar a direção criativa** e clique em **Preparar direção para editar**. Ajuste objetivo, conceito, layout, cores e textos finais, ou selecione uma alternativa de copy. Depois clique em **Gerar com esta direção**. O plano aprovado é reutilizado sem outra análise se pedido, ativos e perfil não mudaram. Campo de copy vazio não autoriza texto extra.
+Abra **Quero controlar a direção criativa** e clique em **Preparar direção para editar**. Ajuste objetivo, conceito, layout, cores, imagem principal, cenário, tipografia e textos finais, ou selecione uma alternativa de copy. O painel mostra os elementos visuais propostos e sua função. Depois clique em **Gerar com esta direção**. O plano aprovado é reutilizado sem outra análise se pedido, ativos e perfil não mudaram. Campo de copy vazio não autoriza texto extra.
 
 ## Edição e revisão
 

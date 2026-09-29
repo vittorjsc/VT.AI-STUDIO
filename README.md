@@ -1,11 +1,12 @@
 # VT.AI Studio
 
-Aplicativo local para criação de artes de redes sociais com IA. Descreva o que precisa, cole ou envie logo/referência/produto e escolha Feed vertical (1080 × 1350) ou Story (1080 × 1920). A versão 1.1 planeja a criação automaticamente; a direção avançada é opcional.
+Aplicativo local para criação de artes de redes sociais com IA. Descreva o que precisa, cole ou envie logo/referência/produto e escolha Feed vertical (1080 × 1350) ou Story (1080 × 1920). A versão 1.1.1 planeja a criação automaticamente; a direção avançada é opcional.
 
 ## Funcionalidades
 
 - Geração de artes a partir de referências, logo e pedido em linguagem natural.
 - Planejamento estruturado automático, com pergunta curta só quando falta uma informação essencial.
+- Autonomia para propor imagens, cenas, metáforas, ilustrações e 3D pertinentes, sem exigir que o usuário liste cada elemento. Um foco dominante não obriga uma arte de apenas título e logo.
 - Perfis de marca: paleta, nicho, tom, preferências e dados confirmados, isolados por cliente.
 - Seleção de trechos relevantes da base local, atualizada ao iniciar.
 - Copy temática concisa e direção avançada editável, sem autorização para inventar ofertas ou dados comerciais.

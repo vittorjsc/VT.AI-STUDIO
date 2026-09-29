@@ -83,7 +83,7 @@ seed();
 // Reimport a document only when its hash changed; keep stable rows across launches.
 importKnowledge();
 const handlers={
- 'GET /api/health':()=>({ok:true,dataDir,version:'1.1.0'}),
+ 'GET /api/health':()=>({ok:true,dataDir,version:'1.1.1'}),
  'GET /api/openai/status':()=>openaiStatus(),
  'GET /api/generations':()=>q('SELECT * FROM generations ORDER BY created_at DESC LIMIT 100').map(creative.serialized),
  'GET /api/clients':()=>q("SELECT * FROM clients WHERE status!='archived' ORDER BY name").map(client),

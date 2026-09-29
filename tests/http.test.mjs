@@ -19,7 +19,7 @@ test('HTTP, migrações, conhecimento, proteção local e idempotência',async t
     globalThis.fetch=nativeFetch;
     await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
     const address=`http://127.0.0.1:${server.address().port}`;
-    const health=await (await nativeFetch(address+'/api/health')).json();assert.equal(health.version,'1.1.0');assert.equal(health.dataDir,dir);
+    const health=await (await nativeFetch(address+'/api/health')).json();assert.equal(health.version,'1.1.1');assert.equal(health.dataDir,dir);
     const knowledge=await (await nativeFetch(address+'/api/knowledge?q=Pedido%20curto')).json();assert.ok(knowledge.some(item=>item.source==='conhecimento/14_intuicao_e_producao.md'&&item.heading==='Pedido curto, plano completo'));
     assert.equal((await nativeFetch(address+'/')).status,200);
     assert.match(await (await nativeFetch(address+'/creative.js')).text(),/Gerar arte · automático/);

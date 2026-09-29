@@ -53,5 +53,7 @@
 .clarification textarea{margin:12px 0}
 .feedback-card{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
 .feedback-card textarea{margin-top:10px;min-height:65px}
+.visual-plan{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:5px;line-height:1.5}
+.visual-plan p{margin:10px 0}
 button:disabled{opacity:.5;cursor:wait}
 @media(max-width:600px){.suggestion{align-items:flex-start;flex-direction:column}.creative-attachment{flex-wrap:wrap}.creative-attachment .ghost{margin-left:auto}}

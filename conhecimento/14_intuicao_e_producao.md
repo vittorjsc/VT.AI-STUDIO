@@ -10,6 +10,14 @@ Perguntar somente se falta informação que muda o objetivo comercial ou a ident
 
 Chamativo significa foco e contraste, não uma soma de selos, partículas, ícones e slogans. Refinamento depende de pesos visuais, espaço negativo, luz e textura coerentes. Preto/dourado não é resposta universal para engenharia ou luxo. Cores da marca, contexto e referência têm prioridade sobre um clichê de nicho.
 
+## Autonomia visual, não apenas título e logo
+
+Pedido curto autoriza decisões criativas, não obriga uma arte sem imagens. Propor uma fotografia ilustrativa, cena, metáfora, objeto, ilustração ou elemento 3D pertinente, escolhendo a linguagem que comunica melhor. Integrar assunto principal, ambiente e apoios com hierarquia. Um foco dominante não significa um único objeto; evitar excessos não significa eliminar narrativa visual.
+
+Não exigir que o usuário enumere os elementos. Um símbolo ilustrativo principal pode comunicar afeto, cuidado ou celebração; isso é diferente de seis ícones acompanhados de slogans. Não impor um coração ou 3D a todo pedido: escolher pela mensagem e marca, não por receita. Minimalismo pode conter uma imagem forte; peça tipográfica é válida quando intencional ou explicitamente solicitada.
+
+Fotografia/cena criada é ilustrativa, não prova de resultado, cliente real ou produto específico. Metáforas não podem sugerir serviços ou benefícios não confirmados. Logo/produto enviados continuam preservados; sem logo enviada, não inventar marca nem deixar um placeholder. Escolher uma linguagem dominante, com apoios compatíveis, em vez de adicionar todo recurso disponível. Esta autonomia vale para criação; edição e adaptação não autorizam adicionar conteúdo fora do pedido.
+
 Produto físico: preservar forma, cor, modelo, rótulos e proporções. Alimentos: textura e luz naturais sem aumentar porção ou acrescentar ingredientes. Carros: preservar carro e rodas, evitar reflexos impossíveis. Pessoas: pele e anatomia plausíveis, sem apresentar pessoa gerada como cliente real. Arquitetura: perspectiva/material coerentes, não anunciar uma construção ilustrativa como projeto comprovado.
 
 ## Conteúdo com função
