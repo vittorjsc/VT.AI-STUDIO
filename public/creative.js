@@ -1,173 +1,168 @@
 function creativeActiveArt(){
   return state.generations.find(art=>art.id===state.activeGenerationId)||state.generations[0];
 }
-
 function creativeAttachmentView(){
   return state.attachments.map((item,index)=>`<div class="attachment creative-attachment">
     <img src="${item.data}" alt="${esc(item.name)}">
     <div class="attachment-info"><strong>${esc(item.name)}</strong><label>Função da imagem
       <select aria-label="Função de ${esc(item.name)}" onchange="creativeSetAttachmentKind(${index},this.value)">
         ${['referência','logo','produto'].map(kind=>`<option value="${kind}" ${item.kind===kind?'selected':''}>${kind==='referência'?'Referência':kind==='logo'?'Logo':'Produto / pessoa'}</option>`).join('')}
-      </select></label></div>
-    <button class="ghost" onclick="creativeRemoveAttachment(${index})">Remover</button>
+      </select></label></div><button class="ghost" onclick="creativeRemoveAttachment(${index})">Remover</button>
   </div>`).join('');
 }
-
 function creativeSuggestion(field,label){
   const suggestion=state.briefing?.[`suggested_${field}`];
-  return suggestion?`<div class="suggestion"><span><strong>Sugestão de ${label}:</strong> ${esc(suggestion)}</span><button class="ghost" onclick="creativeUseSuggestion('${field}')">Usar sugestão</button></div>`:'';
+  return suggestion&&suggestion!==state.briefing[field]?`<div class="suggestion"><span><strong>Alternativa de ${label}:</strong> ${esc(suggestion)}</span><button class="ghost" onclick="creativeUseSuggestion('${field}')">Usar alternativa</button></div>`:'';
 }
-
 function creativeBriefView(){
-  const brief=state.briefing;
-  if(!brief)return '';
-  const field=(name,label,tag='input')=>`<label>${label}${tag==='textarea'?`<textarea data-brief="${name}">${esc(brief[name]||'')}</textarea>`:`<input data-brief="${name}" value="${esc(brief[name]||'')}">`}</label>`;
+  const brief=state.briefing;if(!brief)return '';
+  const field=(name,label,tag='input')=>`<label>${label}${tag==='textarea'?`<textarea maxlength="800" data-brief="${name}">${esc(brief[name]||'')}</textarea>`:`<input maxlength="500" data-brief="${name}" value="${esc(brief[name]||'')}">`}</label>`;
   return `<div class="brief-card" id="briefCard">
-    <div class="section-heading"><div><p class="kicker">Etapa 2 · direção criativa</p><h2>Revise antes de gerar</h2></div><span class="pill ok">EDITÁVEL</span></div>
+    <div class="section-heading"><div><p class="kicker">Direção criativa · opcional</p><h2>Seu plano, com controle</h2></div><span class="pill ok">EDITÁVEL</span></div>
     ${brief.alerts?.length?`<div class="brief-alerts"><strong>Pontos de atenção</strong><ul>${brief.alerts.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
-    <div class="brief-summary"><p><strong>Objetivo:</strong> ${esc(brief.objective||'A definir')}</p><p><strong>Público:</strong> ${esc(brief.audience||'A definir')}</p><p><strong>Posicionamento:</strong> ${esc(brief.positioning||'A definir')}</p></div>
-    <details class="brief-details"><summary>Conceito e composição</summary>
+    <p class="muted">Este planejamento também acontece no modo automático. Aqui você pode ajustar as decisões e os textos antes de gerar.</p>
+    <details class="brief-details"><summary>Objetivo, conceito e composição</summary>
+      ${field('objective','Objetivo')}${field('audience','Público')}${field('positioning','Posicionamento')}
       ${field('concept','Conceito','textarea')}${field('visual_direction','Direção visual','textarea')}${field('layout','Composição','textarea')}${field('palette','Paleta')}
+      <p class="muted">Referência: ${esc(brief.reference_strategy||'Sem referência visual.')}</p>
     </details>
-    <h3>Textos que entrarão na arte</h3>
-    <p class="muted">Só estes campos serão enviados como copy aprovada. Sugestões abaixo só entram se você escolher.</p>
+    <h3>Textos finais da arte</h3><p class="muted">Campos vazios ficam sem texto. Um título temático pode ser preparado automaticamente; preços e dados comerciais precisam estar confirmados.</p>
     ${field('headline','Título principal')}${creativeSuggestion('headline','título')}
-    ${field('support','Texto de apoio')}${creativeSuggestion('support','apoio')}
-    ${field('cta','Chamada para ação')}${creativeSuggestion('cta','CTA')}
-    <div class="actions creative-actions"><button class="primary" id="generateBtn" onclick="creativeGenerate(true)">Aprovar e gerar arte</button><button class="ghost" onclick="creativeDiscardBrief()">Rever pedido</button></div>
+    ${field('support','Apoio — só se necessário')}${creativeSuggestion('support','apoio')}
+    ${field('cta','Chamada para ação — opcional')}${creativeSuggestion('cta','CTA')}
+    <button class="ghost" onclick="creativeDiscardBrief()">Rever pedido</button>
   </div>`;
 }
-
 function creativeReviewView(art){
-  if(state.reviewLoadingId===art.id)return '<div class="review-card"><p class="kicker">Revisão visual</p><p>Conferindo texto, logo, margens e excesso de elementos…</p></div>';
-  if(art.review?.status)return `<div class="review-card ${art.review.status==='aprovada'?'review-ok':'review-warn'}">
-    <div class="section-heading"><p class="kicker">Revisão visual por IA</p><strong>${esc(art.review.status)} · ${esc(art.review.score)}/10</strong></div>
-    ${art.review.issues?.length?`<ul>${art.review.issues.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p>Nenhum problema relevante apontado na análise.</p>'}
-    ${art.review.suggested_fix?`<p class="muted"><strong>Ajuste sugerido:</strong> ${esc(art.review.suggested_fix)}</p>`:''}
-    <p class="muted">Confira a arte antes de publicar: esta revisão é uma ajuda, não uma garantia.</p>
-  </div>`;
-  return `<div class="review-card"><p class="kicker">Revisão visual</p><p class="muted">${esc(state.reviewErrorId===art.id?state.reviewError:'Confira legibilidade, logo e margens antes de publicar.')}</p><button class="ghost" onclick="creativeReview('${art.id}')">Revisar qualidade</button></div>`;
+  if(state.reviewLoadingIds?.has(art.id))return '<div class="review-card"><p class="kicker">Revisão visual</p><p>Comparando conteúdo, marca, produto e margens com os ativos originais…</p></div>';
+  const review=art.review;
+  if(review?.status){
+    const label={publicavel:'Sem bloqueadores apontados',corrigir:'Precisa de correção',conferir:'Conferência necessária'}[review.decision]||review.status;
+    return `<div class="review-card ${review.status==='aprovada'?'review-ok':'review-warn'}">
+      <div class="section-heading"><p class="kicker">Revisão visual por IA</p><strong>${esc(label)}</strong></div>
+      ${review.problems?.length?`<ul>${review.problems.map(item=>`<li><strong>${esc(item.severity)} · ${esc(item.region)}</strong>: ${esc(item.evidence)}<p class="muted">${esc(item.fix)}</p></li>`).join('')}</ul>`:review.issues?.length?`<ul>${review.issues.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p>Nenhum problema relevante apontado.</p>'}
+      ${review.criteria?.length?`<details class="brief-details"><summary>Evidências por critério</summary>${review.criteria.map(item=>`<p><strong>${esc(item.name)} · ${item.score}/5${item.uncertain?' · incerto':''}</strong><br>${esc(item.evidence)}</p>`).join('')}</details>`:''}
+      ${review.suggested_fix?`<p class="muted"><strong>Ajuste sugerido:</strong> ${esc(review.suggested_fix)}</p>${review.decision!=='publicavel'?`<button class="ghost" onclick="creativeFix('${art.id}')">Revisar pedido de correção</button>`:''}`:''}
+      <p class="muted">Confira antes de publicar. A revisão e suas notas são orientações subjetivas, não garantia de perfeição.</p>
+    </div>`;
+  }
+  return `<div class="review-card"><p class="kicker">Revisão visual</p><p class="muted">${esc(state.reviewErrors?.[art.id]||'Confira legibilidade, logo e margens antes de publicar.')}</p><button class="ghost" onclick="creativeReview('${art.id}')">Revisar qualidade</button></div>`;
 }
-
 function creativeEditView(art){
-  return `<h2>Editar versão</h2>
-    <div class="edit-stage"><img id="editImage" class="result-image" src="${art.url}" alt="Arte selecionada"><canvas id="editMaskCanvas" aria-label="Área de edição"></canvas></div>
-    <p class="muted edit-help">Arraste sobre a imagem para marcar uma área específica. Sem seleção, a edição considera a arte toda. A máscara orienta a IA; confira o resultado depois.</p>
+  return `<h2>Editar versão</h2><div class="edit-stage"><img id="editImage" class="result-image" src="${art.url}" alt="Arte selecionada"><canvas id="editMaskCanvas" aria-label="Área de edição"></canvas></div>
+    <p class="muted edit-help">Arraste para marcar uma área. A máscara orienta a IA; não garante preservação pixel a pixel. Original e contexto da marca são mantidos no histórico.</p>
     <button class="ghost" onclick="creativeClearMask()">Limpar seleção</button>
-    <label>O que deve mudar?</label><textarea class="prompt" id="editRequest" placeholder="Ex.: Troque somente o título por 'Feliz Dia do Cliente'."></textarea>
-    <button class="primary generate" id="editBtn" onclick="creativeSubmitEdit()">Gerar nova versão</button>
-    <button class="ghost" style="margin-top:9px" onclick="creativeCancelEdit()">Cancelar</button>`;
+    <label>O que deve mudar?</label><textarea class="prompt" maxlength="4000" id="editRequest" placeholder="Ex.: Troque somente o título por 'Feliz Dia do Cliente'.">${esc(state.editDraft||'')}</textarea>
+    <button class="primary generate" id="editBtn" onclick="creativeSubmitEdit()">Gerar nova versão</button><button class="ghost" onclick="creativeCancelEdit()">Cancelar</button>
+    <p class="muted creative-cost">A edição gera outra imagem e consome créditos. A original não será apagada.</p>`;
 }
-
 function creativeResultView(art){
-  if(!art)return '<h2>Resultado</h2><div class="empty">Sua arte aparecerá aqui.<br><br>Comece adicionando uma referência ou logo.</div>';
+  if(!art)return '<h2>Resultado</h2><div class="empty">Sua arte aparecerá aqui.<br><br>Descreva o que precisa. Logo, referência e produto ajudam a manter a identidade.</div>';
   const target=art.format==='story'?'feed':'story';
   return `<div class="section-heading"><h2>Resultado · ${art.format==='story'?'Story':'Feed'}</h2><span class="pill ok">${art.format==='story'?'1080 × 1920':'1080 × 1350'}</span></div>
     <img class="result-image" src="${art.url}" alt="Arte gerada">
-    <div class="actions creative-actions">
-      <button class="primary" onclick="creativeAdapt('${art.id}','${target}',this)">Gerar para ${target==='story'?'Story':'Feed'}</button>
-      <button class="ghost" onclick="creativeStartEdit('${art.id}')">Editar esta arte</button>
-      <button class="ghost" onclick="downloadArt('${art.url}','${art.format||'feed'}','${art.file||'arte-vt-ai.png'}')">Baixar PNG</button>
-    </div>${creativeReviewView(art)}`;
+    <div class="actions creative-actions"><button class="primary" onclick="creativeAdapt('${art.id}','${target}')">Gerar para ${target==='story'?'Story':'Feed'}</button><button class="ghost" onclick="creativeStartEdit('${art.id}')">Editar esta arte</button><button class="ghost" onclick="downloadArt('${art.url}','${art.format||'feed'}','${art.file||'arte-vt-ai.png'}')">Baixar PNG</button></div>
+    <p class="muted creative-cost">Adaptação e edição geram novas imagens e consomem créditos.</p>
+    ${art.brief?.concept?`<details class="brief-details"><summary>Direção usada nesta arte</summary><p>${esc(art.brief.concept)}</p><p>${esc(art.brief.visual_direction)}</p><p>Marca: ${esc(art.brief.brand?.name||'Sem perfil selecionado')}</p><p>Base consultada: ${esc((art.brief.knowledge_sources||[]).map(item=>item.heading).join(' · ')||'Regras operacionais VT.AI')}</p>${art.brief.edits?.map(item=>`<p>Edição: ${esc(item)}</p>`).join('')||''}</details>`:''}
+    ${creativeReviewView(art)}
+    <div class="feedback-card"><label>O resultado atendeu ao pedido?</label><div class="actions"><button class="ghost" onclick="creativeFeedback('${art.id}','aprovada')">Gostei</button><button class="ghost" onclick="creativeFeedback('${art.id}','rejeitada')">Precisa melhorar</button></div><textarea id="feedbackReason" maxlength="800" placeholder="Opcional: o que funcionou ou precisa mudar?">${esc(state.feedbackDrafts?.[art.id]??art.feedback?.reason??'')}</textarea>${art.feedback?.verdict?`<p class="muted">Feedback salvo: ${esc(art.feedback.verdict)}. Registro local; não treina o modelo automaticamente.</p>`:''}</div>`;
 }
-
 function creativeView(){
-  const active=creativeActiveArt();
-  return `<div class="create-grid"><div class="panel">
-    <div class="section-heading"><div><p class="kicker">Etapa 1 · pedido</p><h2>Converse com a diretora de arte</h2></div></div>
-    <p class="muted">Cole ou envie referência, logo e produto. Depois descreva o objetivo da peça.</p>
-    <div class="paste-zone" contenteditable="true" role="textbox" tabindex="0" onpaste="creativePasteImage(event)">
-      <strong>Cole uma imagem aqui</strong><span>Copie a imagem e pressione Ctrl + V</span>
-      <button class="upload-plus" contenteditable="false" title="Enviar imagem" onclick="document.getElementById('quickImageUpload').click()">+</button>
-      <input id="quickImageUpload" contenteditable="false" type="file" multiple accept="image/png,image/jpeg,image/webp" onchange="creativeAttachFiles(this.files)">
-    </div>
-    <div id="attachments">${creativeAttachmentView()}</div>
-    <label>Seu pedido</label><textarea class="prompt" id="creativePrompt" placeholder="Ex.: Arte de Dia do Cliente para minha loja, baseada na referência. Use a logo e escreva exatamente 'Feliz Dia do Cliente'.">${esc(state.draft||'')}</textarea>
-    <div class="card format-card"><p class="kicker">Formato da arte</p><label>Gerar para</label><select id="creativeFormat"><option value="feed">Feed vertical · 1080 × 1350</option><option value="story">Story · 1080 × 1920</option></select><p class="muted">Depois você pode criar a versão correspondente no outro formato.</p></div>
+  const active=creativeActiveArt(),question=state.briefing?.clarification;
+  return `<div class="create-grid"><div class="panel" id="creativeComposer">
+    <div class="section-heading"><div><p class="kicker">Criação intuitiva</p><h2>O que vamos criar?</h2></div><span class="pill ok">AUTO</span></div>
+    <p class="muted">Descreva em poucas palavras. A VT.AI planeja a direção e a composição para você.</p>
+    <label>Marca — opcional</label><select id="creativeClient"><option value="">Sem perfil · usar pedido e anexos</option>${state.clients.map(client=>`<option value="${client.id}" ${state.clientId===client.id?'selected':''}>${esc(client.name)}</option>`).join('')}</select>
+    <p class="muted creative-cost">Usa somente o contexto da marca escolhida. Configure tom e preferências em Clientes.</p>
+    <div class="paste-zone" contenteditable="true" role="textbox" aria-label="Colar imagem" tabindex="0" onpaste="creativePasteImage(event)">
+      <strong>Cole uma imagem aqui</strong><span>Ctrl + V · ou envie pelo +</span><button class="upload-plus" contenteditable="false" title="Enviar imagem" onclick="document.getElementById('quickImageUpload').click()">+</button><input id="quickImageUpload" contenteditable="false" type="file" multiple accept="image/png,image/jpeg,image/webp" onchange="creativeAttachFiles(this.files)">
+    </div><div id="attachments">${creativeAttachmentView()}</div>${state.pendingUploads?'<p class="muted">Carregando anexos…</p>':''}
+    <label>Seu pedido</label><textarea class="prompt" maxlength="6000" id="creativePrompt" placeholder="Ex.: Uma arte de Dia do Cliente para minha cafeteria.">${esc(state.draft||'')}</textarea>
+    <div class="card format-card"><p class="kicker">Formato da arte</p><select id="creativeFormat" aria-label="Formato da arte"><option value="feed">Feed vertical · 1080 × 1350</option><option value="story">Story · 1080 × 1920</option></select><p class="muted">Depois crie a mesma arte no outro formato, com recomposição.</p></div>
     ${state.creativeError?`<p class="creative-error" role="alert">${esc(state.creativeError)}</p>`:''}
-    ${creativeBriefView()}
-    <div class="actions creative-actions" id="prepActions" ${state.briefing?'hidden':''}>
-      <button class="primary" id="prepareBtn" onclick="creativePrepare()">Preparar direção criativa</button>
-      <button class="ghost" id="directBtn" onclick="creativeGenerate(false)">Gerar direto</button>
-    </div>
-    <p class="muted creative-cost">Preparar e revisar usam análise por IA e podem consumir créditos. A imagem só é gerada quando você confirma.</p>
-  </div><div class="panel">${state.editing?creativeEditView(state.editing):creativeResultView(active)}</div></div>
+    ${question?`<div class="brief-alerts clarification"><strong>Só falta uma informação</strong><p>${esc(question)}</p><textarea id="clarificationAnswer" maxlength="1500" placeholder="Responda aqui…">${esc(state.clarificationDraft||'')}</textarea><button class="primary" onclick="creativeAnswer()">Continuar</button></div>`:''}
+    ${!question?creativeBriefView():''}
+    <div class="actions creative-actions"><button class="primary" id="generateBtn" onclick="creativeGenerate()">${state.briefing?'Gerar com esta direção':'Gerar arte · automático'}</button></div>
+    <details class="advanced-card" ${state.advanced?'open':''}><summary>Quero controlar a direção criativa</summary><p class="muted">Opcional: visualize o plano e edite textos, conceito, cores e composição antes de gerar.</p><button class="ghost" id="prepareBtn" onclick="creativePrepare()">Preparar direção para editar</button></details>
+    ${state.creativeBusy?`<p class="creative-progress" role="status">${esc(state.creativeBusy)} · pode levar alguns minutos. Não feche esta página.</p>`:''}
+    <p class="muted creative-cost">Ao preparar ou gerar, o pedido, anexos, contexto da marca e trechos relevantes da base são enviados à OpenAI. Planejamento, imagem e revisão consomem créditos. Sem novas gerações automáticas para correção.</p>
+  </div><div class="panel" id="creativeResult">${state.editing?creativeEditView(state.editing):creativeResultView(active)}</div></div>
   <div class="panel history-panel"><h2>Histórico de criações</h2>${state.generations.length?`<div class="generated-list">${state.generations.map(art=>`<button class="ghost ${active?.id===art.id?'selected':''}" title="Abrir esta arte" onclick="creativeSelectArt('${art.id}')"><img src="${art.url}" alt="Arte ${art.format||'feed'} gerada em ${esc(art.created_at)}"></button>`).join('')}</div>`:'<p class="muted">Ainda não há artes geradas.</p>'}</div>`;
 }
-
 function creativeAfter(){
-  const prompt=$('#creativePrompt');if(prompt)prompt.oninput=event=>{state.draft=event.target.value;creativeInvalidateBrief(false)};
-  const format=$('#creativeFormat');if(format){format.value=state.format;format.onchange=event=>{state.format=event.target.value;creativeInvalidateBrief(true)}};
+  const prompt=$('#creativePrompt');if(prompt)prompt.oninput=event=>{state.draft=event.target.value;creativeSaveDraft();creativeInvalidateBrief(false)};
+  const format=$('#creativeFormat');if(format){format.value=state.format;format.onchange=event=>{state.format=event.target.value;creativeSaveDraft();creativeInvalidateBrief(true)}}
+  const client=$('#creativeClient');if(client)client.onchange=event=>{state.clientId=event.target.value;creativeSaveDraft();creativeInvalidateBrief(true)};
   document.querySelectorAll('[data-brief]').forEach(field=>field.oninput=event=>{state.briefing[event.target.dataset.brief]=event.target.value});
+  const edit=$('#editRequest');if(edit)edit.oninput=event=>state.editDraft=event.target.value;
+  const answer=$('#clarificationAnswer');if(answer)answer.oninput=event=>state.clarificationDraft=event.target.value;
+  const feedback=$('#feedbackReason');if(feedback)feedback.oninput=event=>{state.feedbackDrafts||={};state.feedbackDrafts[creativeActiveArt().id]=event.target.value};
+  const advanced=$('.advanced-card');if(advanced)advanced.ontoggle=()=>state.advanced=advanced.open;
+  if(state.creativeBusy){document.querySelectorAll('#creativeComposer button,#creativeComposer input,#creativeComposer select,#creativeComposer textarea,#creativeResult button,#creativeResult textarea').forEach(element=>element.disabled=true);$('.paste-zone')?.setAttribute('contenteditable','false')}
+  if(questionPresent())$('#generateBtn').disabled=true;
+  if(state.pendingUploads){$('#generateBtn').disabled=true;$('#prepareBtn').disabled=true}
   if(state.editing)creativeInitMask();
 }
-
+function questionPresent(){return !!state.briefing?.clarification}
+function creativeSaveDraft(){try{localStorage.setItem('vt-creative-draft',JSON.stringify({prompt:state.draft,format:state.format,clientId:state.clientId||''}))}catch{}}
+function creativeRestoreDraft(){try{const draft=JSON.parse(localStorage.getItem('vt-creative-draft')||'{}');state.draft=String(draft.prompt||'').slice(0,6000);state.format=draft.format==='story'?'story':'feed';state.clientId=state.clients.some(client=>client.id===draft.clientId)?draft.clientId:''}catch{}}
 function creativeInvalidateBrief(rerender){
-  state.briefing=null;state.creativeError='';
-  if(rerender)render();else{document.querySelector('#briefCard')?.remove();const actions=$('#prepActions');if(actions)actions.hidden=false}
+  state.briefing=null;state.creativeError='';state.clarificationDraft='';
+  if(rerender)render();else{$('#briefCard')?.remove();$('.clarification')?.remove();const button=$('#generateBtn');if(button){button.textContent='Gerar arte · automático';button.disabled=!!state.creativeBusy||!!state.pendingUploads}}
 }
-
-function creativeSetAttachmentKind(index,kind){
-  if(!state.attachments[index])return;
-  state.attachments[index].kind=kind;creativeInvalidateBrief(false);
-}
-
-function creativeRemoveAttachment(index){state.attachments.splice(index,1);creativeInvalidateBrief(true)}
-
-function creativeAttachFiles(files){
+function creativeSetAttachmentKind(index,kind){if(state.creativeBusy||!state.attachments[index])return;state.attachments[index].kind=kind;creativeInvalidateBrief(false)}
+function creativeRemoveAttachment(index){if(state.creativeBusy)return;state.attachments.splice(index,1);creativeInvalidateBrief(true)}
+async function creativeAttachFiles(files){
+  if(state.creativeBusy)return;
   state.draft=$('#creativePrompt')?.value??state.draft;
-  const available=Math.max(0,4-state.attachments.length);
+  const available=Math.max(0,4-state.attachments.length-(state.pendingUploads||0));
   if(files.length>available)toast('Use no máximo 4 imagens por arte.');
-  for(const [index,file] of [...files].slice(0,available).entries()){
-    if(!/^image\/(png|jpeg|webp)$/.test(file.type)){toast('Use PNG, JPG ou WebP.');continue}
-    if(file.size>10*1024*1024){toast('Cada imagem deve ter no máximo 10 MB.');continue}
-    const kind=state.attachments.length+index?'logo':'referência',reader=new FileReader();
-    reader.onload=()=>{state.attachments.push({name:file.name,kind,data:reader.result});creativeInvalidateBrief(true)};
-    reader.readAsDataURL(file);
-  }
+  const accepted=[...files].slice(0,available).filter(file=>{if(!/^image\/(png|jpeg|webp)$/.test(file.type)){toast('Use PNG, JPG ou WebP.');return false}if(file.size>10*1024*1024){toast('Cada imagem deve ter no máximo 10 MB.');return false}return true});
+  state.pendingUploads=(state.pendingUploads||0)+accepted.length;render();
+  const results=await Promise.all(accepted.map(file=>new Promise(resolve=>{const reader=new FileReader();reader.onload=()=>resolve({name:file.name,data:reader.result});reader.onerror=()=>{toast('Não foi possível ler '+file.name);resolve(null)};reader.readAsDataURL(file)})));
+  for(const item of results.filter(Boolean)){item.kind=state.attachments.length===1?'logo':state.attachments.length>=2?'produto':'referência';state.attachments.push(item)}
+  state.pendingUploads-=accepted.length;creativeInvalidateBrief(true);creativeSaveDraft();
 }
-
-function creativePasteImage(event){
-  event.preventDefault();
-  const files=[...event.clipboardData.items].filter(item=>item.type.startsWith('image/')).map(item=>item.getAsFile()).filter(Boolean);
-  if(!files.length)return toast('Copie uma imagem e pressione Ctrl + V nesta área.');
-  creativeAttachFiles(files);
+function creativePasteImage(event){event.preventDefault();if(state.creativeBusy)return;const files=[...event.clipboardData.items].filter(item=>item.type.startsWith('image/')).map(item=>item.getAsFile()).filter(Boolean);if(!files.length)return toast('Copie uma imagem e pressione Ctrl + V aqui.');creativeAttachFiles(files)}
+function creativeInput(){
+  state.draft=($('#creativePrompt')?.value??state.draft).trim();creativeSaveDraft();
+  if(state.draft.length<8)throw Error('Descreva a arte que deseja criar.');
+  if(state.pendingUploads)throw Error('Aguarde o carregamento dos anexos.');
+  return {prompt:state.draft,format:state.format,client_id:state.clientId||null,images:state.attachments};
 }
-
+async function creativePaidApi(url,body){return api(url,'POST',{...body,request_id:crypto.randomUUID()})}
 async function creativePrepare(){
-  const prompt=$('#creativePrompt')?.value.trim()||'';state.draft=prompt;state.creativeError='';
-  if(prompt.length<8)return toast('Descreva a arte que deseja criar.');
-  if(!state.attachments.length)return toast('Adicione uma referência ou logo.');
-  const button=$('#prepareBtn');button.disabled=true;button.textContent='Analisando pedido…';
-  try{state.briefing=await api('/api/briefing','POST',{prompt,format:state.format,images:state.attachments});render()}
-  catch(error){state.creativeError=error.message;render()}
+  if(state.creativeBusy)return;
+  try{const input=creativeInput();state.resumeAutomatic=false;state.creativeError='';state.creativeBusy='Interpretando o pedido e os ativos';render();state.briefing=await creativePaidApi('/api/briefing',input);state.advanced=true}
+  catch(error){state.creativeError=error.message}
+  finally{state.creativeBusy='';render()}
 }
-
-function creativeUseSuggestion(field){
-  const value=state.briefing?.[`suggested_${field}`];if(!value)return;
-  state.briefing[field]=value;
-  const input=document.querySelector(`[data-brief="${field}"]`);if(input)input.value=value;
-  toast('Sugestão adicionada. Revise antes de gerar.');
+function creativeUseSuggestion(field){const value=state.briefing?.[`suggested_${field}`];if(!value)return;state.briefing[field]=value;const input=document.querySelector(`[data-brief="${field}"]`);if(input)input.value=value}
+function creativeDiscardBrief(){creativeInvalidateBrief(true)}
+async function creativeAnswer(){
+  const answer=$('#clarificationAnswer')?.value.trim();if(!answer)return toast('Responda à informação que falta.');
+  const automatic=state.resumeAutomatic;state.draft=(state.draft+'\nComplemento do usuário: '+answer).slice(0,6000);state.briefing=null;state.clarificationDraft='';creativeSaveDraft();render();
+  if(automatic)await creativeGenerate();else await creativePrepare();
 }
-
-function creativeDiscardBrief(){state.briefing=null;render()}
-
-async function creativeGenerate(withBrief){
-  const prompt=$('#creativePrompt')?.value.trim()||'';state.draft=prompt;state.creativeError='';
-  if(!prompt)return toast('Escreva o pedido para a arte.');
-  if(!state.attachments.length)return toast('Adicione uma referência ou logo.');
-  const briefing=withBrief?state.briefing:null;if(withBrief&&!briefing)return toast('Prepare o briefing primeiro.');
-  const button=withBrief?$('#generateBtn'):$('#directBtn');button.disabled=true;button.textContent='Gerando arte…';
+async function creativeGenerate(){
+  if(state.creativeBusy||questionPresent())return;
+  let art;
   try{
-    const art=await api('/api/generate','POST',{prompt,format:state.format,images:state.attachments,briefing});
-    state.generations.unshift(art);state.activeGenerationId=art.id;state.attachments=[];state.draft='';state.briefing=null;
-    render();creativeReview(art.id);
-  }catch(error){state.creativeError=error.message;render()}
+    const input=creativeInput();state.creativeError='';state.resumeAutomatic=true;
+    if(!state.briefing){state.creativeBusy='Planejando direção, conteúdo e composição';render();state.briefing=await creativePaidApi('/api/briefing',input)}
+    if(state.briefing.clarification)return;
+    state.creativeBusy='Gerando a arte com o plano preparado';render();
+    art=await creativePaidApi('/api/generate',{...input,briefing:state.briefing});
+    if(art.needs_clarification){state.briefing=art.brief;art=null;return}
+    state.generations.unshift(art);state.activeGenerationId=art.id;state.editing=null;state.attachments=[];state.draft='';state.briefing=null;creativeSaveDraft();
+  }catch(error){state.creativeError=error.message}
+  finally{state.creativeBusy='';render()}
+  if(art)creativeReview(art.id);
 }
-
-function creativeSelectArt(id){state.activeGenerationId=id;state.editing=null;state.editRect=null;render()}
-function creativeStartEdit(id){const art=state.generations.find(item=>item.id===id);if(!art)return toast('Arte não encontrada.');state.activeGenerationId=id;state.editing=art;state.editRect=null;render()}
-function creativeCancelEdit(){state.editing=null;state.editRect=null;render()}
+function creativeSelectArt(id){if(state.creativeBusy)return;state.activeGenerationId=id;state.editing=null;state.editRect=null;render()}
+function creativeStartEdit(id){if(state.creativeBusy)return;const art=state.generations.find(item=>item.id===id);if(!art)return toast('Arte não encontrada.');state.activeGenerationId=id;state.editing=art;state.editDraft='';state.editRect=null;render()}
+function creativeCancelEdit(){if(state.creativeBusy)return;state.editing=null;state.editRect=null;state.editDraft='';render()}
+function creativeFix(id){if(state.creativeBusy)return;creativeStartEdit(id);const art=state.generations.find(item=>item.id===id);state.editDraft=art?.review?.suggested_fix||'';render()}
 
 function creativeInitMask(){
   const image=$('#editImage'),canvas=$('#editMaskCanvas');if(!image||!canvas)return;
@@ -200,24 +195,36 @@ function creativeMaskData(){
 }
 
 async function creativeSubmitEdit(){
+  if(state.creativeBusy)return;
   const request=$('#editRequest')?.value.trim()||'';if(request.length<4)return toast('Descreva a alteração desejada.');
-  const button=$('#editBtn');button.disabled=true;button.textContent='Criando nova versão…';
-  try{
-    const art=await api('/api/generate/edit','POST',{generation_id:state.editing.id,request,mask:creativeMaskData()});
-    state.generations.unshift(art);state.activeGenerationId=art.id;state.editing=null;state.editRect=null;render();creativeReview(art.id);
-  }catch(error){button.disabled=false;button.textContent='Gerar nova versão';toast(error.message)}
+  const generation_id=state.editing.id,mask=creativeMaskData();state.editDraft=request;let art;
+  try{state.creativeBusy='Aplicando a alteração e preservando a versão original';render();art=await creativePaidApi('/api/generate/edit',{generation_id,request,mask});state.generations.unshift(art);state.activeGenerationId=art.id;state.editing=null;state.editRect=null;state.editDraft=''}
+  catch(error){toast(error.message)}
+  finally{state.creativeBusy='';render()}
+  if(art)creativeReview(art.id);
 }
-
-async function creativeAdapt(id,target,button){
-  if(button){button.disabled=true;button.textContent='Adaptando…'}
-  try{const art=await api('/api/generate/adapt','POST',{generation_id:id,target_format:target});state.generations.unshift(art);state.activeGenerationId=art.id;render();creativeReview(art.id)}
-  catch(error){toast(error.message);if(button){button.disabled=false;button.textContent='Tentar novamente'}}
+async function creativeAdapt(id,target){
+  if(state.creativeBusy)return;let art;
+  try{state.creativeBusy='Recompondo a arte para '+(target==='story'?'Story':'Feed');render();art=await creativePaidApi('/api/generate/adapt',{generation_id:id,target_format:target});state.generations.unshift(art);state.activeGenerationId=art.id}
+  catch(error){toast(error.message)}
+  finally{state.creativeBusy='';render()}
+  if(art)creativeReview(art.id);
 }
-
 async function creativeReview(id){
-  const art=state.generations.find(item=>item.id===id);if(!art||art.review?.status)return;
-  state.reviewLoadingId=id;state.reviewErrorId=null;render();
-  try{art.review=await api('/api/generate/review','POST',{generation_id:id})}
-  catch(error){state.reviewErrorId=id;state.reviewError=error.message}
-  finally{state.reviewLoadingId=null;render()}
+  const art=state.generations.find(item=>item.id===id);state.reviewLoadingIds||=new Set();state.reviewErrors||={};
+  if(!art||state.reviewLoadingIds.has(id)||art.review?.status)return;
+  state.reviewLoadingIds.add(id);delete state.reviewErrors[id];creativeRefreshReview(id);
+  try{const review=await creativePaidApi('/api/generate/review',{generation_id:id});const current=state.generations.find(item=>item.id===id);if(current)current.review=review}
+  catch(error){state.reviewErrors[id]=error.message}
+  finally{state.reviewLoadingIds.delete(id);creativeRefreshReview(id)}
 }
+function creativeRefreshReview(id){
+  if(state.page!=='create'||state.editing||creativeActiveArt()?.id!==id)return;
+  const card=$('#creativeResult .review-card');if(card)card.outerHTML=creativeReviewView(creativeActiveArt());
+}
+async function creativeFeedback(id,verdict){
+  const art=state.generations.find(item=>item.id===id);if(!art)return;
+  try{art.feedback=await api('/api/generate/feedback','POST',{generation_id:id,verdict,reason:$('#feedbackReason')?.value||''});toast('Feedback salvo localmente.');render()}
+  catch(error){toast(error.message)}
+}
+function creativeUseClient(id){if(state.creativeBusy)return;state.clientId=id;creativeInvalidateBrief(false);creativeSaveDraft();setPage('create')}

@@ -45,4 +45,13 @@
 .history-panel .generated-list button.selected{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}
 .history-panel .generated-list img{display:block;aspect-ratio:4/5;object-fit:cover;border:0}
 [hidden]{display:none!important}
+.advanced-card{margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:7px}
+.advanced-card summary{cursor:pointer;font-weight:700;color:var(--green)}
+.advanced-card p{margin:12px 0}
+.creative-progress{margin:16px 0;padding:12px;border-left:3px solid var(--green);background:var(--glow);line-height:1.5}
+.clarification{margin-top:18px;line-height:1.5}
+.clarification textarea{margin:12px 0}
+.feedback-card{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+.feedback-card textarea{margin-top:10px;min-height:65px}
+button:disabled{opacity:.5;cursor:wait}
 @media(max-width:600px){.suggestion{align-items:flex-start;flex-direction:column}.creative-attachment{flex-wrap:wrap}.creative-attachment .ghost{margin-left:auto}}

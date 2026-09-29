@@ -1,48 +1,54 @@
-# VT.AI Studio by NUKELABS
+# VT.AI Studio by NUKELABS · 1.1
 
-Aplicativo local para Windows, em português, com criação de artes por conversa usando referência visual e logo, além de clientes, campanhas, editor por camadas e busca na base VT.AI.
+Aplicativo local para Windows que transforma pedidos simples em artes para redes sociais. Interface em português, verde, com tema claro/escuro.
 
-## Geração de arte por referência
+## Criar uma arte
 
-Na tela **Criar arte**, cole uma referência/logo com `Ctrl + V` ou use o botão **+** para enviar um arquivo. Identifique se cada anexo é referência, logo ou produto. Descreva a arte desejada e escolha **Feed** (1080 × 1350) ou **Story** (1080 × 1920). Clique em **Preparar direção criativa** para a VT.AI analisar o pedido e propor conceito, composição e paleta antes da imagem. Revise os campos e clique em **Aprovar e gerar arte**. Se preferir, **Gerar direto** pula essa etapa.
+1. Opcionalmente selecione uma marca cadastrada em **Clientes**. O perfil guarda nicho, cores, tom, preferências e informações comerciais confirmadas.
+2. Cole imagens com **Ctrl + V** ou envie pelo **+**. Até quatro PNG/JPG/WebP, com até 10 MB cada. Identifique a função: referência, logo ou produto/pessoa. Adicionar anexo não apaga seu pedido.
+3. Descreva em poucas palavras: “Uma arte de Dia do Cliente para minha cafeteria”. Para texto literal, informe exatamente o que deve aparecer. Anexos ajudam na identidade, mas não são obrigatórios quando o pedido pode ser criado sem ativos específicos.
+4. Escolha **Feed** (1080 × 1350) ou **Story** (1080 × 1920) e clique em **Gerar arte · automático**.
+5. A VT.AI interpreta o pedido, usa contexto da marca e orientação relevante da base, planeja a composição e então gera. Se faltar informação indispensável, apresenta uma pergunta curta e aguarda sua resposta.
+6. Confira a revisão e baixe o PNG. Use o botão correspondente para criar a mesma arte no outro formato, com recomposição, não esticamento ou corte simples.
 
-Textos encontrados literalmente no pedido podem entrar nos campos aprovados. Ideias novas aparecem como sugestões separadas: só entram na arte se você clicar em **Usar sugestão** ou digitá-las nos campos. Não trate a análise como substituta da conferência final. O briefing, a geração e a revisão por IA usam créditos da API. A chave nunca é enviada ao navegador nem gravada no projeto.
+A direção privilegia foco, respiro, hierarquia e conteúdo intencional. Pode criar um título temático curto, mas não deve inventar preço, desconto, contato, prazo, garantia ou benefício. Forneça fatos comerciais quando precisarem aparecer. A IA ainda pode errar: confira texto, produto, logo e informações antes de publicar.
 
-Depois de gerar, a VT.AI faz uma revisão visual e aponta problemas perceptíveis de texto, hierarquia, logo e excesso de elementos. Use **Gerar para Story** ou **Gerar para Feed** para criar a versão correspondente da mesma arte. A conversão recompõe a peça para o novo formato — não apenas estica a imagem. Para alterar um detalhe, clique em **Editar esta arte**, arraste sobre a região desejada e descreva a mudança. A imagem original permanece no histórico. O botão **Baixar PNG** entrega o arquivo nas dimensões finais do formato escolhido.
+## Direção criativa avançada
 
-O direcionamento da VT.AI privilegia uma peça limpa e intencional: não inventa telefone, endereço, preço, slogans, selos, frases de preenchimento ou ícones decorativos. Para um resultado melhor, escreva no pedido somente os textos e informações que realmente devem aparecer.
+Abra **Quero controlar a direção criativa** e clique em **Preparar direção para editar**. Ajuste objetivo, conceito, layout, cores e textos finais, ou selecione uma alternativa de copy. Depois clique em **Gerar com esta direção**. O plano aprovado é reutilizado sem outra análise se pedido, ativos e perfil não mudaram. Campo de copy vazio não autoriza texto extra.
 
-Antes de abrir o aplicativo, configure a chave em uma nova janela do PowerShell:
+## Edição e revisão
+
+**Editar esta arte** abre um pedido de alteração. Arraste sobre uma região para orientar a edição com máscara ou descreva a mudança sem seleção. A IA gera nova versão e preserva a original, contexto e ativos no histórico. A máscara não garante preservação pixel a pixel: compare versões.
+
+A revisão apresenta problemas por região e evidências de conteúdo, hierarquia, marca/produto, legibilidade e acabamento. Um bloqueador não desaparece porque a nota estética é alta. **Revisar pedido de correção** preenche a edição com o ajuste sugerido; altere-o se necessário e confirme para gerar. Não há regenerações automáticas de correção.
+
+Use **Gostei** ou **Precisa melhorar**, com motivo opcional, para registrar feedback. Ele fica local; não treina o modelo nem altera o perfil da marca automaticamente.
+
+## Créditos, chave e privacidade
+
+Planejamento/revisão: GPT-5 mini. Imagens: GPT Image 2, qualidade alta. Essas operações, incluindo edição e adaptação, consomem créditos da API OpenAI.
+
+Ao preparar ou gerar, pedido, perfil selecionado, orientação relevante da base e anexos usados são enviados à OpenAI. A chave só é lida no servidor local; não aparece no navegador nem é gravada no projeto. Dados e anexos ficam em `dados-vt-ai/`, fora do Git. Ambiente Windows não é cofre criptografado: quem controla sua conta pode acessar a variável. Uma chave compartilhada em chat deve ser revogada e substituída.
+
+Configure uma chave nova no PowerShell:
 
 ```powershell
 setx OPENAI_API_KEY "sua_chave_nova"
 ```
 
-Feche e abra o VT.AI Studio após executar esse comando. A geração usa créditos da API OpenAI. Sem a variável, os recursos locais continuam disponíveis, mas a geração mostra uma mensagem de configuração.
+Feche e reabra o VT.AI após configurar. Em **Configurações**, **Verificar conexão** checa autenticação sem gerar imagem.
 
 ## Abrir pela área de trabalho
 
-1. Clique com o botão direito em `start-vt-ai-studio.bat` e escolha **Enviar para > Área de trabalho (criar atalho)**.
-2. Use esse atalho para abrir o VT.AI Studio. O navegador abrirá em `http://127.0.0.1:4173` e o serviço aceita conexões apenas deste computador.
-3. Para encerrar, feche a janela preta aberta pelo atalho. Se fechar apenas o navegador, seus dados continuam salvos.
+Crie um atalho para `start-vt-ai-studio.bat` usando **Enviar para > Área de trabalho (criar atalho)**. O atalho inicia o serviço e abre `http://127.0.0.1:4173/`. Se já estiver aberto, reutiliza o serviço. Precisa apenas de Node.js 22.5 ou superior, sem instalar pacotes. Fechar só o navegador não encerra o serviço.
 
-Requisito: Node.js 22.5 ou superior. Não há instalação de pacotes. Análise, geração, edição, adaptação e revisão com IA consomem créditos da API.
+## Dados e backup
 
-## Primeiro uso
+SQLite, anexos originais, artes e backups ficam em `dados-vt-ai/`. O histórico mostra as 100 versões mais recentes; registros e arquivos anteriores não são apagados.
 
-1. Em **Criar arte**, cole ou envie uma referência e a logo da empresa.
-2. Escreva o pedido com o objetivo, os textos exatos, a marca e o estilo desejado.
-3. Escolha **Feed** ou **Story**, prepare e revise a direção criativa, e clique em **Aprovar e gerar arte**. Você também pode usar **Gerar direto**.
-4. Confira a revisão visual. Caso precise mudar texto ou elemento, use **Editar esta arte** e, se necessário, marque a área a alterar. A original é preservada no histórico.
-5. Se a campanha também precisar do outro formato, use **Gerar para Story** ou **Gerar para Feed** na arte final.
+**Criar backup do banco** copia somente o SQLite. Para backup completo, feche o serviço e copie toda a pasta `dados-vt-ai/`. Não mova apenas o banco com o serviço aberto. Para restaurar, feche o VT.AI e substitua o banco ou pasta por sua cópia. Restauração online não é permitida.
 
-## Dados, backup e limites
+A base é atualizada ao iniciar, sem downloads durante a criação. Cadastro, histórico, feedback e busca funcionam offline; IA precisa de internet.
 
-- O banco e os backups ficam em `dados-vt-ai/` na pasta do aplicativo. Não mova somente o arquivo SQLite enquanto o app estiver aberto.
-- Em **Configurações**, use **Criar backup do banco**. Para restaurar, feche o app e substitua `dados-vt-ai/studio.sqlite` por uma cópia em `dados-vt-ai/backups/`.
-- Em **Conhecimento**, clique em **Importar/atualizar base** uma vez e pesquise termos como `hierarquia`; cada resultado mostra arquivo e seção.
-- Funciona offline após o Node estar instalado, exceto pelas gerações e edições com IA, que usam a API OpenAI. A qualidade **high** é usada para priorizar o acabamento visual e pode consumir mais créditos por imagem.
-
-## Diagnóstico
-
-Se a porta estiver ocupada, encerre uma instância anterior do `node server.mjs` e abra o atalho novamente. Nunca é necessário baixar modelos, fontes ou arquivos durante a edição.
+O rascunho textual fica no navegador. Anexos ainda não enviados não sobrevivem a uma recarga; mantenha a página aberta enquanto processa. Se a rede falhar após gerar, confira o histórico antes de tentar outra vez. Não repetimos chamadas pagas automaticamente.

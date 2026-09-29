@@ -16,9 +16,18 @@ if not defined VT_NODE (
   pause
   exit /b 1
 )
+rem Reutiliza o servidor deste aplicativo; evita iniciar outro Node na mesma porta.
+set "VT_STUDIO_EXPECTED=%~dp0dados-vt-ai"
+powershell -NoProfile -Command "try { $r=Invoke-RestMethod 'http://127.0.0.1:4173/api/health' -TimeoutSec 2; if ($r.ok -and [IO.Path]::GetFullPath($r.dataDir).TrimEnd('\') -eq [IO.Path]::GetFullPath($env:VT_STUDIO_EXPECTED).TrimEnd('\')) { exit 0 }; exit 2 } catch { exit 1 }" >nul 2>&1
+if errorlevel 2 (
+  echo ERRO: A porta 4173 pertence a outra copia do VT.AI. Feche essa copia antes de abrir esta.
+  pause
+  exit /b 1
+)
+if not errorlevel 1 goto :ready
 start "VT.AI Studio - Servidor" /B "%VT_NODE%" server.mjs
 for /l %%I in (1,1,15) do (
-  powershell -NoProfile -Command "if (Test-NetConnection 127.0.0.1 -Port 4173 -InformationLevel Quiet) { exit 0 } else { exit 1 }" >nul 2>&1
+  powershell -NoProfile -Command "try { $r=Invoke-RestMethod 'http://127.0.0.1:4173/api/health' -TimeoutSec 2; if ($r.ok -and [IO.Path]::GetFullPath($r.dataDir).TrimEnd('\') -eq [IO.Path]::GetFullPath($env:VT_STUDIO_EXPECTED).TrimEnd('\')) { exit 0 }; exit 1 } catch { exit 1 }" >nul 2>&1
   if not errorlevel 1 goto :ready
   timeout /t 1 /nobreak >nul
 )
