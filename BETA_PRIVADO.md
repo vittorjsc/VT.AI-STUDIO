@@ -18,6 +18,17 @@ $betaCode
 
 Rodar no computador permite testar o login, mas `127.0.0.1` só funciona no próprio computador. Para amigos acessarem pela internet, hospede o servidor; não basta enviar o atalho.
 
+## Beta gratuito pelo Cloudflare Tunnel
+
+Para uma rodada curta com amigos, abra **VT.AI Studio - Beta Cloudflare** na área de trabalho ou `iniciar-beta-cloudflare.bat` nesta pasta. O iniciador usa o `cloudflared.exe` instalado em `%LOCALAPPDATA%\VT-AI-Studio`, abre um túnel HTTPS temporário, inicia o servidor com cookies seguros e mostra o link público quando a verificação de saúde passar. O banco SQLite e as artes continuam no seu computador.
+
+1. Na primeira abertura, veja o código de instalação executando no PowerShell: `[Environment]::GetEnvironmentVariable('VT_AI_SETUP_CODE','User')`. Não envie esse código aos amigos. Abra o link do túnel e crie a conta administradora com uma senha exclusiva de pelo menos 12 caracteres.
+2. Em **Configurações → Conta e convites**, gere um convite individual para cada amigo. Envie a URL pública e o código de convite por mensagem privada. Cada amigo usa **Recebi um convite** e cria a própria conta.
+3. Deixe o computador acordado, conectado à internet e a janela do beta aberta durante os testes. Fechar a janela ou desligar o PC interrompe o acesso. Ao reiniciar, a Cloudflare fornece outro link; envie o novo endereço aos participantes.
+4. Antes de abrir o acesso, substitua a chave OpenAI que foi compartilhada em conversa por uma chave nova na variável de usuário `OPENAI_API_KEY`. A hospedagem por túnel é gratuita, mas chamadas à API OpenAI podem ser cobradas. O limite inicial é de 3 artes por testador em 24 horas; o administrador não tem esse limite.
+
+Esse túnel é apenas para testes pontuais, sem garantia de disponibilidade ou URL permanente. O link é público, mas as rotas privadas exigem login. Não compartilhe o código de instalação nem a senha administradora.
+
 ## Hospedagem simples para o beta
 
 Uma opção é um serviço Node.js com HTTPS e volume persistente, como o Railway. O código lê `PORT` automaticamente. Prepare **um único serviço/instância**, pois o banco atual é SQLite local ao volume e a fila de imagens é mantida em memória.
