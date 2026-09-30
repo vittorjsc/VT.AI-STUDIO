@@ -1,6 +1,6 @@
 # VT.AI Studio
 
-Aplicativo local para criação de artes de redes sociais com IA. Descreva o que precisa, cole ou envie logo/referência/produto e escolha Feed vertical (1080 × 1350) ou Story (1080 × 1920). A versão 1.1.1 planeja a criação automaticamente; a direção avançada é opcional.
+Aplicativo para criação de artes de redes sociais com IA. Descreva o que precisa, cole ou envie logo/referência/produto e escolha Feed vertical (1080 × 1350) ou Story (1080 × 1920). A versão 1.2.0 inclui um beta privado com contas por convite; a direção avançada continua opcional.
 
 ## Funcionalidades
 
@@ -16,16 +16,17 @@ Aplicativo local para criação de artes de redes sociais com IA. Descreva o que
 - Direção criativa que evita frases genéricas, dados inventados e excesso de ícones.
 - Interface em português com tema claro e escuro.
 - Dados e histórico guardados localmente em SQLite.
+- Conta administradora, convites de uso único para testadores, login e histórico isolado por conta.
 - Revisão com evidências por critério e comparação de ativos/versões. Bloqueadores não são compensados por nota estética.
 - Feedback humano local e proteção contra cliques/solicitações duplicados.
 
 ## Como executar no Windows
 
-Requer Node.js 22.5 ou superior e uma chave da API OpenAI para gerar imagens. Salve a chave como variável de ambiente `OPENAI_API_KEY` do usuário e abra `start-vt-ai-studio.bat`. O aplicativo abre em `http://127.0.0.1:4173/`.
+Requer Node.js 22.5 ou superior e uma chave da API OpenAI para gerar imagens. Salve a chave como variável de ambiente `OPENAI_API_KEY` do usuário. Configure também `VT_AI_SETUP_CODE` com um código aleatório de pelo menos 20 caracteres para criar a primeira conta administradora. Abra `start-vt-ai-studio.bat`: o aplicativo abre em `http://127.0.0.1:4173/`. Confira o passo a passo em [BETA_PRIVADO.md](BETA_PRIVADO.md).
 
-Planejamento e revisão usam GPT-5 mini; imagens usam GPT Image 2 em qualidade alta. Essas operações consomem créditos. A chave é lida no servidor local; não deve ser colocada em arquivos do projeto nem em commits. Pedido, perfil selecionado, orientação relevante e anexos usados são enviados à OpenAI. Feedback não treina o modelo automaticamente.
+Planejamento e revisão usam GPT-5 mini; imagens usam GPT Image 2 em qualidade alta. Essas operações consomem créditos. A chave é lida somente no servidor; não deve ser colocada em arquivos do projeto nem em commits. Pedido, perfil selecionado, orientação relevante e anexos usados são enviados à OpenAI. Feedback não treina o modelo automaticamente.
 
-Veja [LEIA_ME_USUARIO.md](LEIA_ME_USUARIO.md) para instruções de uso. O diretório `dados-vt-ai/`, que contém o banco de dados e as artes do usuário, fica fora do Git.
+Veja [LEIA_ME_USUARIO.md](LEIA_ME_USUARIO.md) para instruções de uso. O diretório `dados-vt-ai/`, que contém o banco de dados e as artes, fica fora do Git. Para hospedar, monte um volume persistente e aponte `VT_AI_DATA_DIR` para ele; não use o disco efêmero do serviço.
 
 ## Verificação e limites
 

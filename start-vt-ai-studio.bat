@@ -5,6 +5,9 @@ rem Carrega a chave persistida pelo setx mesmo se o Explorer foi aberto antes de
 if not defined OPENAI_API_KEY (
   for /f "tokens=1,2,*" %%A in ('reg query "HKCU\Environment" /v OPENAI_API_KEY 2^>nul') do if /I "%%A"=="OPENAI_API_KEY" set "OPENAI_API_KEY=%%C"
 )
+if not defined VT_AI_SETUP_CODE (
+  for /f "tokens=1,2,*" %%A in ('reg query "HKCU\Environment" /v VT_AI_SETUP_CODE 2^>nul') do if /I "%%A"=="VT_AI_SETUP_CODE" set "VT_AI_SETUP_CODE=%%C"
+)
 set "VT_NODE="
 for /f "delims=" %%N in ('where node 2^>nul') do if not defined VT_NODE set "VT_NODE=%%N"
 if not defined VT_NODE if exist "%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe" set "VT_NODE=%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe"
@@ -18,16 +21,16 @@ if not defined VT_NODE (
 )
 rem Reutiliza o servidor deste aplicativo; evita iniciar outro Node na mesma porta.
 set "VT_STUDIO_EXPECTED=%~dp0dados-vt-ai"
-powershell -NoProfile -Command "try { $r=Invoke-RestMethod 'http://127.0.0.1:4173/api/health' -TimeoutSec 2; if ($r.ok -and [IO.Path]::GetFullPath($r.dataDir).TrimEnd('\') -eq [IO.Path]::GetFullPath($env:VT_STUDIO_EXPECTED).TrimEnd('\')) { exit 0 }; exit 2 } catch { exit 1 }" >nul 2>&1
+powershell -NoProfile -Command "try { $r=Invoke-RestMethod 'http://127.0.0.1:4173/api/health' -TimeoutSec 2; if ($r.ok -and $r.version -eq '1.2.0' -and [IO.Path]::GetFullPath($r.dataDir).TrimEnd('\') -eq [IO.Path]::GetFullPath($env:VT_STUDIO_EXPECTED).TrimEnd('\')) { exit 0 }; exit 2 } catch { exit 1 }" >nul 2>&1
 if errorlevel 2 (
-  echo ERRO: A porta 4173 pertence a outra copia do VT.AI. Feche essa copia antes de abrir esta.
+  echo ERRO: Ha uma versao antiga ou outra copia do VT.AI aberta na porta 4173. Feche o servidor anterior e tente novamente.
   pause
   exit /b 1
 )
 if not errorlevel 1 goto :ready
 start "VT.AI Studio - Servidor" /B "%VT_NODE%" server.mjs
 for /l %%I in (1,1,15) do (
-  powershell -NoProfile -Command "try { $r=Invoke-RestMethod 'http://127.0.0.1:4173/api/health' -TimeoutSec 2; if ($r.ok -and [IO.Path]::GetFullPath($r.dataDir).TrimEnd('\') -eq [IO.Path]::GetFullPath($env:VT_STUDIO_EXPECTED).TrimEnd('\')) { exit 0 }; exit 1 } catch { exit 1 }" >nul 2>&1
+  powershell -NoProfile -Command "try { $r=Invoke-RestMethod 'http://127.0.0.1:4173/api/health' -TimeoutSec 2; if ($r.ok -and $r.version -eq '1.2.0' -and [IO.Path]::GetFullPath($r.dataDir).TrimEnd('\') -eq [IO.Path]::GetFullPath($env:VT_STUDIO_EXPECTED).TrimEnd('\')) { exit 0 }; exit 1 } catch { exit 1 }" >nul 2>&1
   if not errorlevel 1 goto :ready
   timeout /t 1 /nobreak >nul
 )

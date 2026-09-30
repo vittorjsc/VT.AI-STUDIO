@@ -6,28 +6,30 @@
   <title>VT.AI Studio</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="creative.css">
+  <link rel="stylesheet" href="studio.css">
 </head>
 <body>
-  <aside>
-    <div class="brand">VT.<i>AI</i><small>STUDIO · NUKELABS</small></div>
-    <nav>
-      <button data-page="create">Criar arte</button>
-      <button data-page="dashboard">Visão geral</button>
-      <button data-page="clients">Clientes</button>
-      <button data-page="knowledge">Conhecimento</button>
-      <button data-page="settings">Configurações</button>
+  <aside class="sidebar" aria-label="Navegação principal">
+    <div class="brand" aria-label="VT.AI Studio">VT.<i>AI</i><small>STUDIO <span>·</span> NUKELABS</small></div>
+    <p class="sidebar-label">WORKSPACE</p>
+    <nav aria-label="Seções">
+      <button type="button" data-page="create"><span class="nav-index" aria-hidden="true">01</span><span>Criar arte</span></button>
+      <button type="button" data-page="dashboard"><span class="nav-index" aria-hidden="true">02</span><span>Visão geral</span></button>
+      <button type="button" data-page="clients"><span class="nav-index" aria-hidden="true">03</span><span>Marcas</span></button>
+      <button type="button" data-page="knowledge"><span class="nav-index" aria-hidden="true">04</span><span>Conhecimento</span></button>
+      <button type="button" data-page="settings"><span class="nav-index" aria-hidden="true">05</span><span>Configurações</span></button>
     </nav>
-    <div class="offline">● Dados locais</div>
+    <div class="sidebar-foot"><div class="offline"><span class="status-dot" aria-hidden="true"></span> Beta privado</div><p>Seu espaço de criação.</p></div>
   </aside>
   <main>
-    <header>
-      <div><p id="eyebrow">VT.AI STUDIO</p><h1 id="title">Criar arte com IA</h1></div>
-      <div><button class="theme-toggle" id="themeToggle">Tema claro</button><button class="primary" id="quick">+ Novo cliente</button></div>
+    <header class="topbar">
+      <div class="page-heading"><p id="eyebrow">VT.AI STUDIO</p><h1 id="title">Criar arte com IA</h1><p id="pageDescription" class="muted"></p></div>
+      <div class="header-actions"><button type="button" class="theme-toggle" id="themeToggle">Tema claro</button><button type="button" class="header-action" id="quick">+ Nova marca</button></div>
     </header>
     <section id="app"></section>
   </main>
   <dialog id="modal"><form method="dialog" id="form"><button class="close" value="cancel">×</button><div id="formContent"></div><menu><button value="cancel">Cancelar</button><button class="primary" id="submit" value="default">Salvar</button></menu></form></dialog>
-  <div id="toast"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
   <script src="creative.js"></script>
   <script src="app.js"></script>
 </body>

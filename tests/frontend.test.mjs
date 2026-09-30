@@ -39,3 +39,27 @@ test('a pergunta essencial mantém pedido e não gera imagem',async()=>{
 test('plano invalidado por mudança do pedido não é reutilizado',()=>{
   const {context,state}=ui({briefing:{headline:'Anterior'},creativeError:'Anterior'});context.creativeInvalidateBrief(false);assert.equal(state.briefing,null);assert.equal(state.creativeError,'');
 });
+test('tela principal prioriza pedido, anexos opcionais e formato sem esconder ações',()=>{
+  const {context}=ui();const view=context.creativeView();
+  assert.ok(view.indexOf('id="creativePrompt"')<view.indexOf('class="paste-zone"'));
+  assert.match(view,/Imagens de apoio <small>OPCIONAL<\/small>/);
+  assert.match(view,/id="creativeFormat"/);
+  assert.match(view,/Gerar minha arte/);
+  assert.match(view,/Direção criativa avançada/);
+  assert.match(view,/Prévia da arte/);
+});
+test('resultado mantém edição, adaptação e download para os dois formatos',()=>{
+  for(const format of ['feed','story']){
+    const art={id:'art-1',format,url:'/files/art.png',file:'art.png',review:{status:'aprovada'}};
+    const {context}=ui({generations:[art]});const view=context.creativeResultView(art);
+    assert.match(view,/Editar arte/);assert.match(view,/Baixar PNG/);
+    assert.match(view,new RegExp(`Adaptar para ${format==='feed'?'Story':'Feed'}`));
+  }
+});
+test('rascunho no navegador não atravessa contas',()=>{
+ const {context,state,storage}=ui({user:{id:'owner',role:'admin'},draft:'Segredo da marca principal'});
+ context.creativeSaveDraft();
+ assert.ok(storage.has('vt-creative-draft:owner'));
+ state.user={id:'friend',role:'tester'};state.draft='';context.creativeRestoreDraft();
+ assert.equal(state.draft,'');
+});

@@ -7,7 +7,7 @@ function creativeAttachmentView(){
     <div class="attachment-info"><strong>${esc(item.name)}</strong><label>Função da imagem
       <select aria-label="Função de ${esc(item.name)}" onchange="creativeSetAttachmentKind(${index},this.value)">
         ${['referência','logo','produto'].map(kind=>`<option value="${kind}" ${item.kind===kind?'selected':''}>${kind==='referência'?'Referência':kind==='logo'?'Logo':'Produto / pessoa'}</option>`).join('')}
-      </select></label></div><button class="ghost" onclick="creativeRemoveAttachment(${index})">Remover</button>
+      </select></label></div><button type="button" class="ghost" aria-label="Remover ${esc(item.name)}" onclick="creativeRemoveAttachment(${index})">Remover</button>
   </div>`).join('');
 }
 function creativeSuggestion(field,label){
@@ -50,19 +50,19 @@ function creativeReviewView(art){
   return `<div class="review-card"><p class="kicker">Revisão visual</p><p class="muted">${esc(state.reviewErrors?.[art.id]||'Confira legibilidade, logo e margens antes de publicar.')}</p><button class="ghost" onclick="creativeReview('${art.id}')">Revisar qualidade</button></div>`;
 }
 function creativeEditView(art){
-  return `<h2>Editar versão</h2><div class="edit-stage"><img id="editImage" class="result-image" src="${art.url}" alt="Arte selecionada"><canvas id="editMaskCanvas" aria-label="Área de edição"></canvas></div>
+  return `<div class="section-heading result-heading"><div><p class="kicker">AJUSTE FINO</p><h2>Editar versão</h2></div><span class="pill">${art.format==='story'?'STORY':'FEED'}</span></div><div class="edit-stage"><img id="editImage" class="result-image" src="${art.url}" alt="Arte selecionada para edição"><canvas id="editMaskCanvas" aria-label="Área de edição"></canvas></div>
     <p class="muted edit-help">Arraste para marcar uma área. A máscara orienta a IA; não garante preservação pixel a pixel. Original e contexto da marca são mantidos no histórico.</p>
-    <button class="ghost" onclick="creativeClearMask()">Limpar seleção</button>
-    <label>O que deve mudar?</label><textarea class="prompt" maxlength="4000" id="editRequest" placeholder="Ex.: Troque somente o título por 'Feliz Dia do Cliente'.">${esc(state.editDraft||'')}</textarea>
-    <button class="primary generate" id="editBtn" onclick="creativeSubmitEdit()">Gerar nova versão</button><button class="ghost" onclick="creativeCancelEdit()">Cancelar</button>
+    <button type="button" class="ghost" onclick="creativeClearMask()">Limpar seleção</button>
+    <label for="editRequest">O que deve mudar?</label><textarea class="prompt" maxlength="4000" id="editRequest" placeholder="Ex.: Troque somente o título por 'Feliz Dia do Cliente'.">${esc(state.editDraft||'')}</textarea>
+    <div class="edit-actions"><button type="button" class="primary generate" id="editBtn" onclick="creativeSubmitEdit()">Gerar nova versão</button><button type="button" class="ghost" onclick="creativeCancelEdit()">Cancelar</button></div>
     <p class="muted creative-cost">A edição gera outra imagem e consome créditos. A original não será apagada.</p>`;
 }
 function creativeResultView(art){
-  if(!art)return '<h2>Resultado</h2><div class="empty">Sua arte aparecerá aqui.<br><br>Descreva o que precisa. Logo, referência e produto ajudam a manter a identidade.</div>';
+  if(!art)return `<div class="section-heading result-heading"><div><p class="kicker">SEU ESPAÇO VISUAL</p><h2>Prévia da arte</h2></div><span class="pill">AGUARDANDO PEDIDO</span></div><div class="result-placeholder"><div class="placeholder-canvas" aria-hidden="true"><div class="placeholder-orbit"></div><span>VT.<b>AI</b></span><small>IDEIA → ARTE</small></div><div class="placeholder-copy"><strong>Sua ideia ganha forma aqui.</strong><p>Escreva o pedido, escolha o formato e gere a primeira versão. Depois você pode editar ou adaptar para o outro formato.</p></div></div>`;
   const target=art.format==='story'?'feed':'story';
-  return `<div class="section-heading"><h2>Resultado · ${art.format==='story'?'Story':'Feed'}</h2><span class="pill ok">${art.format==='story'?'1080 × 1920':'1080 × 1350'}</span></div>
-    <img class="result-image" src="${art.url}" alt="Arte gerada">
-    <div class="actions creative-actions"><button class="primary" onclick="creativeAdapt('${art.id}','${target}')">Gerar para ${target==='story'?'Story':'Feed'}</button><button class="ghost" onclick="creativeStartEdit('${art.id}')">Editar esta arte</button><button class="ghost" onclick="downloadArt('${art.url}','${art.format||'feed'}','${art.file||'arte-vt-ai.png'}')">Baixar PNG</button></div>
+  return `<div class="section-heading result-heading"><div><p class="kicker">RESULTADO ATUAL</p><h2>Arte para ${art.format==='story'?'Story':'Feed'}</h2></div><span class="pill ok">${art.format==='story'?'1080 × 1920':'1080 × 1350'}</span></div>
+    <div class="result-stage"><img class="result-image" src="${art.url}" alt="Arte gerada para ${art.format==='story'?'Story':'Feed'}"></div>
+    <div class="actions creative-actions result-actions"><button type="button" class="primary" onclick="creativeAdapt('${art.id}','${target}')">Adaptar para ${target==='story'?'Story':'Feed'}</button><button type="button" class="ghost" onclick="creativeStartEdit('${art.id}')">Editar arte</button><button type="button" class="ghost" onclick="downloadArt('${art.url}','${art.format||'feed'}','${art.file||'arte-vt-ai.png'}')">Baixar PNG</button></div>
     <p class="muted creative-cost">Adaptação e edição geram novas imagens e consomem créditos.</p>
     ${art.brief?.concept?`<details class="brief-details"><summary>Direção usada nesta arte</summary><p>${esc(art.brief.concept)}</p><p>${esc(art.brief.visual_direction)}</p><p>Marca: ${esc(art.brief.brand?.name||'Sem perfil selecionado')}</p><p>Base consultada: ${esc((art.brief.knowledge_sources||[]).map(item=>item.heading).join(' · ')||'Regras operacionais VT.AI')}</p>${art.brief.edits?.map(item=>`<p>Edição: ${esc(item)}</p>`).join('')||''}</details>`:''}
     ${creativeReviewView(art)}
@@ -70,25 +70,25 @@ function creativeResultView(art){
 }
 function creativeView(){
   const active=creativeActiveArt(),question=state.briefing?.clarification;
-  return `<div class="create-grid"><div class="panel" id="creativeComposer">
-    <div class="section-heading"><div><p class="kicker">Criação intuitiva</p><h2>O que vamos criar?</h2></div><span class="pill ok">AUTO</span></div>
-    <p class="muted">Descreva em poucas palavras. A VT.AI propõe a ideia visual, imagens e elementos pertinentes — você não precisa listar cada detalhe.</p>
-    <label>Marca — opcional</label><select id="creativeClient"><option value="">Sem perfil · usar pedido e anexos</option>${state.clients.map(client=>`<option value="${client.id}" ${state.clientId===client.id?'selected':''}>${esc(client.name)}</option>`).join('')}</select>
-    <p class="muted creative-cost">Usa somente o contexto da marca escolhida. Configure tom e preferências em Clientes.</p>
-    <div class="paste-zone" contenteditable="true" role="textbox" aria-label="Colar imagem" tabindex="0" onpaste="creativePasteImage(event)">
-      <strong>Cole uma imagem aqui</strong><span>Ctrl + V · ou envie pelo +</span><button class="upload-plus" contenteditable="false" title="Enviar imagem" onclick="document.getElementById('quickImageUpload').click()">+</button><input id="quickImageUpload" contenteditable="false" type="file" multiple accept="image/png,image/jpeg,image/webp" onchange="creativeAttachFiles(this.files)">
-    </div><div id="attachments">${creativeAttachmentView()}</div>${state.pendingUploads?'<p class="muted">Carregando anexos…</p>':''}
-    <label>Seu pedido</label><textarea class="prompt" maxlength="6000" id="creativePrompt" placeholder="Ex.: Uma arte de Dia do Cliente para minha cafeteria.">${esc(state.draft||'')}</textarea>
-    <div class="card format-card"><p class="kicker">Formato da arte</p><select id="creativeFormat" aria-label="Formato da arte"><option value="feed">Feed vertical · 1080 × 1350</option><option value="story">Story · 1080 × 1920</option></select><p class="muted">Depois crie a mesma arte no outro formato, com recomposição.</p></div>
+  return `<div class="create-grid studio-workspace"><div class="panel composer-panel" id="creativeComposer">
+    <div class="section-heading composer-heading"><div><p class="kicker">01 / SEU BRIEFING</p><h2>O que você quer criar?</h2></div><span class="pill ok">MODO SIMPLES</span></div>
+    <p class="muted composer-intro">Pode escrever como falaria com um designer. A VT.AI pensa no conceito, na composição e nos elementos visuais.</p>
+    <label for="creativePrompt">Seu pedido <span class="field-optional">· comece aqui</span></label><textarea class="prompt" maxlength="6000" id="creativePrompt" placeholder="Ex.: Faça uma arte de Dia do Cliente para minha cafeteria, usando as cores da marca.">${esc(state.draft||'')}</textarea>
+    <div class="field-group"><div class="field-title"><span>Imagens de apoio <small>OPCIONAL</small></span><span class="field-count">${state.attachments.length}/4</span></div>
+      <div class="paste-zone" contenteditable="true" role="textbox" aria-label="Cole uma imagem de referência, logo ou produto" tabindex="0" onbeforeinput="event.preventDefault()" onpaste="creativePasteImage(event)" ondragover="event.preventDefault()" ondrop="creativeDropFiles(event)">
+        <div class="paste-symbol" aria-hidden="true">+</div><strong>Cole ou arraste uma imagem</strong><span>Referência, logo ou produto · PNG, JPG e WebP</span><button type="button" class="upload-plus" contenteditable="false" title="Selecionar imagens" aria-label="Selecionar imagens para anexar" onclick="document.getElementById('quickImageUpload').click()">Escolher arquivo</button><input id="quickImageUpload" contenteditable="false" type="file" multiple accept="image/png,image/jpeg,image/webp" onchange="creativeAttachFiles(this.files);this.value=''">
+      </div><div id="attachments">${creativeAttachmentView()}</div>${state.pendingUploads?'<p class="muted" role="status">Carregando anexos…</p>':''}</div>
+    <div class="composer-options"><div><label for="creativeClient">Marca <span class="field-optional">· opcional</span></label><select id="creativeClient"><option value="">Sem marca cadastrada</option>${state.clients.map(client=>`<option value="${client.id}" ${state.clientId===client.id?'selected':''}>${esc(client.name)}</option>`).join('')}</select></div>
+      <div><label for="creativeFormat">Formato inicial</label><select id="creativeFormat"><option value="feed">Feed · 1080 × 1350</option><option value="story">Story · 1080 × 1920</option></select></div></div>
+    <p class="muted format-hint">Depois da geração, você pode adaptar a composição para o outro formato — sem esticar a arte.</p>
     ${state.creativeError?`<p class="creative-error" role="alert">${esc(state.creativeError)}</p>`:''}
     ${question?`<div class="brief-alerts clarification"><strong>Só falta uma informação</strong><p>${esc(question)}</p><textarea id="clarificationAnswer" maxlength="1500" placeholder="Responda aqui…">${esc(state.clarificationDraft||'')}</textarea><button class="primary" onclick="creativeAnswer()">Continuar</button></div>`:''}
     ${!question?creativeBriefView():''}
-    <div class="actions creative-actions"><button class="primary" id="generateBtn" onclick="creativeGenerate()">${state.briefing?'Gerar com esta direção':'Gerar arte · automático'}</button></div>
-    <details class="advanced-card" ${state.advanced?'open':''}><summary>Quero controlar a direção criativa</summary><p class="muted">Opcional: visualize o plano e edite textos, conceito, cores e composição antes de gerar.</p><button class="ghost" id="prepareBtn" onclick="creativePrepare()">Preparar direção para editar</button></details>
-    ${state.creativeBusy?`<p class="creative-progress" role="status">${esc(state.creativeBusy)} · pode levar alguns minutos. Não feche esta página.</p>`:''}
-    <p class="muted creative-cost">Ao preparar ou gerar, o pedido, anexos, contexto da marca e trechos relevantes da base são enviados à OpenAI. Planejamento, imagem e revisão consomem créditos. Sem novas gerações automáticas para correção.</p>
-  </div><div class="panel" id="creativeResult">${state.editing?creativeEditView(state.editing):creativeResultView(active)}</div></div>
-  <div class="panel history-panel"><h2>Histórico de criações</h2>${state.generations.length?`<div class="generated-list">${state.generations.map(art=>`<button class="ghost ${active?.id===art.id?'selected':''}" title="Abrir esta arte" onclick="creativeSelectArt('${art.id}')"><img src="${art.url}" alt="Arte ${art.format||'feed'} gerada em ${esc(art.created_at)}"></button>`).join('')}</div>`:'<p class="muted">Ainda não há artes geradas.</p>'}</div>`;
+    <button type="button" class="primary generate" id="generateBtn" onclick="creativeGenerate()">${state.briefing?'Gerar com esta direção':'Gerar minha arte'} <span aria-hidden="true">↗</span></button>
+    <details class="advanced-card" ${state.advanced?'open':''}><summary>Direção criativa avançada <span>Opcional</span></summary><p class="muted">Veja o plano e ajuste textos, conceito, cores ou composição antes da geração.</p><button type="button" class="ghost" id="prepareBtn" onclick="creativePrepare()">Preparar direção para editar</button></details>
+    <details class="privacy-details"><summary>Como funciona o uso de créditos e dados</summary><p class="muted">Ao preparar ou gerar, pedido, anexos, contexto da marca e trechos relevantes da base são enviados à OpenAI. Planejamento, imagem e revisão consomem créditos. Não fazemos novas gerações automáticas para correção.</p></details>
+  </div><div class="panel result-panel" id="creativeResult">${state.creativeBusy?`<div class="creative-progress" role="status"><span class="progress-spark" aria-hidden="true"></span><div><strong>${esc(state.creativeBusy)}</strong><span>Pode levar alguns minutos. Mantenha esta página aberta.</span></div></div>`:''}${state.editing?creativeEditView(state.editing):creativeResultView(active)}</div></div>
+  ${state.generations.length?`<div class="panel history-panel"><div class="section-heading"><div><p class="kicker">SUAS VERSÕES</p><h2>Histórico de criações</h2></div><span class="pill">${state.generations.length} ${state.generations.length===1?'ARTE':'ARTES'}</span></div><div class="generated-list">${state.generations.map(art=>`<button type="button" class="ghost ${active?.id===art.id?'selected':''}" aria-pressed="${active?.id===art.id}" title="Abrir arte para ${art.format==='story'?'Story':'Feed'}" onclick="creativeSelectArt('${art.id}')"><img src="${art.url}" alt="Arte ${art.format||'feed'} gerada em ${esc(art.created_at)}"><span>${art.format==='story'?'Story':'Feed'}</span></button>`).join('')}</div></div>`:''}`;
 }
 function creativeAfter(){
   const prompt=$('#creativePrompt');if(prompt)prompt.oninput=event=>{state.draft=event.target.value;creativeSaveDraft();creativeInvalidateBrief(false)};
@@ -105,11 +105,12 @@ function creativeAfter(){
   if(state.editing)creativeInitMask();
 }
 function questionPresent(){return !!state.briefing?.clarification}
-function creativeSaveDraft(){try{localStorage.setItem('vt-creative-draft',JSON.stringify({prompt:state.draft,format:state.format,clientId:state.clientId||''}))}catch{}}
-function creativeRestoreDraft(){try{const draft=JSON.parse(localStorage.getItem('vt-creative-draft')||'{}');state.draft=String(draft.prompt||'').slice(0,6000);state.format=draft.format==='story'?'story':'feed';state.clientId=state.clients.some(client=>client.id===draft.clientId)?draft.clientId:''}catch{}}
+function creativeDraftKey(){return state.user?.id?`vt-creative-draft:${state.user.id}`:'vt-creative-draft'}
+function creativeSaveDraft(){try{localStorage.setItem(creativeDraftKey(),JSON.stringify({prompt:state.draft,format:state.format,clientId:state.clientId||''}))}catch{}}
+function creativeRestoreDraft(){try{let raw=localStorage.getItem(creativeDraftKey());if(!raw&&state.user?.role==='admin'){raw=localStorage.getItem('vt-creative-draft');if(raw){localStorage.setItem(creativeDraftKey(),raw);localStorage.removeItem('vt-creative-draft')}}const draft=JSON.parse(raw||'{}');state.draft=String(draft.prompt||'').slice(0,6000);state.format=draft.format==='story'?'story':'feed';state.clientId=state.clients.some(client=>client.id===draft.clientId)?draft.clientId:''}catch{}}
 function creativeInvalidateBrief(rerender){
   state.briefing=null;state.creativeError='';state.clarificationDraft='';
-  if(rerender)render();else{$('#briefCard')?.remove();$('.clarification')?.remove();const button=$('#generateBtn');if(button){button.textContent='Gerar arte · automático';button.disabled=!!state.creativeBusy||!!state.pendingUploads}}
+  if(rerender)render();else{$('#briefCard')?.remove();$('.clarification')?.remove();const button=$('#generateBtn');if(button){button.innerHTML='Gerar minha arte <span aria-hidden="true">↗</span>';button.disabled=!!state.creativeBusy||!!state.pendingUploads}}
 }
 function creativeSetAttachmentKind(index,kind){if(state.creativeBusy||!state.attachments[index])return;state.attachments[index].kind=kind;creativeInvalidateBrief(false)}
 function creativeRemoveAttachment(index){if(state.creativeBusy)return;state.attachments.splice(index,1);creativeInvalidateBrief(true)}
@@ -125,6 +126,7 @@ async function creativeAttachFiles(files){
   state.pendingUploads-=accepted.length;creativeInvalidateBrief(true);creativeSaveDraft();
 }
 function creativePasteImage(event){event.preventDefault();if(state.creativeBusy)return;const files=[...event.clipboardData.items].filter(item=>item.type.startsWith('image/')).map(item=>item.getAsFile()).filter(Boolean);if(!files.length)return toast('Copie uma imagem e pressione Ctrl + V aqui.');creativeAttachFiles(files)}
+function creativeDropFiles(event){event.preventDefault();if(state.creativeBusy)return;const files=[...(event.dataTransfer?.files||[])];if(files.length)creativeAttachFiles(files)}
 function creativeInput(){
   state.draft=($('#creativePrompt')?.value??state.draft).trim();creativeSaveDraft();
   if(state.draft.length<8)throw Error('Descreva a arte que deseja criar.');
