@@ -166,8 +166,9 @@ export const server=http.createServer(async(req,res)=>{
   const railwayHealth=hosted&&req.method==='GET'&&req.url==='/api/health'&&req.headers.host==='healthcheck.railway.app'&&!req.headers.origin;
   if(!railwayHealth&&(hosted?(!publicUrl||req.headers.host!==publicUrl.host):!/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(req.headers.host||'')))return reply(res,403,{error:'Endereço não autorizado.'});
   if(req.headers.origin&&req.headers.origin!==expectedOrigin)return reply(res,403,{error:'Origem não autorizada.'});
-  if(req.headers['sec-fetch-site']==='cross-site')return reply(res,403,{error:'Acesso externo não autorizado.'});
   const url=new URL(req.url,'http://127.0.0.1');
+  const sharedLinkVisit=req.method==='GET'&&!req.headers.origin&&(url.pathname==='/'||url.pathname==='/index.html');
+  if(req.headers['sec-fetch-site']==='cross-site'&&!sharedLinkVisit)return reply(res,403,{error:'Acesso externo não autorizado.'});
   const user=auth.current(req);
   if(req.method==='GET'&&url.pathname.startsWith('/files/')){
    if(!user)return reply(res,401,{error:'Faça login para acessar esta arte.'});

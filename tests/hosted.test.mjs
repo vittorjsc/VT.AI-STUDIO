@@ -17,6 +17,9 @@ test('modo hospedado exige origem HTTPS e cookie Secure',async()=>{
   const request=(route,headers={},body)=>new Promise((resolve,reject)=>{const req=http.request(base+route,{method:body?'POST':'GET',headers:{Host:'vtai.example.test',Origin:'https://vtai.example.test',...(body?{'Content-Type':'application/json'}:{}),...headers}},res=>{const chunks=[];res.on('data',chunk=>chunks.push(chunk));res.on('end',()=>resolve({status:res.statusCode,headers:{get:name=>res.headers[name.toLowerCase()]},json:async()=>JSON.parse(Buffer.concat(chunks).toString())}))});req.on('error',reject);req.end(body?JSON.stringify(body):undefined)});
   assert.equal((await fetch(base+'/api/health')).status,403);
   assert.equal((await request('/api/health',{Origin:'https://evil.example.test'})).status,403);
+  assert.equal((await request('/',{Origin:'','Sec-Fetch-Site':'cross-site','Sec-Fetch-Mode':'navigate','Sec-Fetch-Dest':'document'})).status,200);
+  assert.equal((await request('/api/auth/status',{Origin:'','Sec-Fetch-Site':'cross-site'})).status,403);
+  assert.equal((await request('/api/auth/login',{Origin:'','Sec-Fetch-Site':'cross-site'},{email:'friend@example.test',password:'test-password'})).status,403);
   const health=await (await request('/api/health')).json();assert.equal(health.ok,true,JSON.stringify(health));assert.equal(health.dataDir,undefined);
   const railway=await request('/api/health',{Host:'healthcheck.railway.app',Origin:''});assert.equal(railway.status,200);
   const created=await request('/api/auth/setup',{}, {email:'owner@example.test',name:'Admin',password:'a-long-test-password',setup_code:process.env.VT_AI_SETUP_CODE});
