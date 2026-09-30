@@ -37,13 +37,15 @@ for(const table of ['clients','generations']){
  if(!q(`PRAGMA table_info(${table})`).some(column=>column.name==='user_id'))db.exec(`ALTER TABLE ${table} ADD COLUMN user_id TEXT`);
 }
 db.exec('CREATE INDEX IF NOT EXISTS clients_user ON clients(user_id); CREATE INDEX IF NOT EXISTS generations_user ON generations(user_id);');
-const publicOrigin=process.env.VT_AI_PUBLIC_ORIGIN?.replace(/\/$/,'');
+const railwayHosted=!!process.env.RAILWAY_PROJECT_ID;
+const publicOrigin=(process.env.VT_AI_PUBLIC_ORIGIN||(railwayHosted&&process.env.RAILWAY_PUBLIC_DOMAIN?`https://${process.env.RAILWAY_PUBLIC_DOMAIN}`:undefined))?.replace(/\/$/,'');
+const hosted=railwayHosted||!!publicOrigin;
 let publicUrl;
 if(publicOrigin){
  try{publicUrl=new URL(publicOrigin)}catch{throw Error('VT_AI_PUBLIC_ORIGIN deve ser uma origem HTTPS válida.')}
  if(publicUrl.protocol!=='https:'||publicUrl.origin!==publicOrigin||publicUrl.username||publicUrl.password)throw Error('VT_AI_PUBLIC_ORIGIN deve ser uma origem HTTPS, sem caminho ou credenciais.');
 }
-const auth=createAuth(db,{secure:!!publicOrigin});
+const auth=createAuth(db,{secure:hosted});
 
 function q(sql, ...args) { return db.prepare(sql).all(...args); }
 function one(sql, ...args) { return db.prepare(sql).get(...args); }
@@ -95,7 +97,7 @@ seed();
 // Reimport a document only when its hash changed; keep stable rows across launches.
 importKnowledge();
 const handlers={
- 'GET /api/health':()=>({ok:true,version:'1.2.0',...(!publicOrigin?{dataDir}:{})}),
+ 'GET /api/health':()=>({ok:true,version:'1.2.0',...(!hosted?{dataDir}:{})}),
  'GET /api/auth/status':()=>({setup_required:auth.setupRequired(),setup_configured:auth.setupConfigured()}),
  'GET /api/auth/me':(_,__,user)=>({user:auth.publicUser(user)}),
  'POST /api/auth/setup':(b,_,__,res)=>({user:auth.setup(b,res)}),
@@ -161,8 +163,8 @@ async function invoke(handler,body,url,route,user,res,req){
 export const server=http.createServer(async(req,res)=>{
  try{
   const expectedOrigin=publicOrigin||`http://${req.headers.host}`;
-  const railwayHealth=!!publicOrigin&&req.method==='GET'&&req.url==='/api/health'&&req.headers.host==='healthcheck.railway.app'&&!req.headers.origin;
-  if(!railwayHealth&&(publicOrigin?req.headers.host!==publicUrl.host:!/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(req.headers.host||'')))return reply(res,403,{error:'Endereço não autorizado.'});
+  const railwayHealth=hosted&&req.method==='GET'&&req.url==='/api/health'&&req.headers.host==='healthcheck.railway.app'&&!req.headers.origin;
+  if(!railwayHealth&&(hosted?(!publicUrl||req.headers.host!==publicUrl.host):!/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(req.headers.host||'')))return reply(res,403,{error:'Endereço não autorizado.'});
   if(req.headers.origin&&req.headers.origin!==expectedOrigin)return reply(res,403,{error:'Origem não autorizada.'});
   if(req.headers['sec-fetch-site']==='cross-site')return reply(res,403,{error:'Acesso externo não autorizado.'});
   const url=new URL(req.url,'http://127.0.0.1');
@@ -203,6 +205,6 @@ export async function closeStudio(){
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const port=Number(process.env.PORT||4173);
- server.listen(port,publicOrigin?'0.0.0.0':'127.0.0.1',()=>console.log(`VT.AI Studio: ${publicOrigin||`http://127.0.0.1:${port}`}${auth.setupRequired()?' | Crie o administrador com VT_AI_SETUP_CODE.':''}`));
+ server.listen(port,hosted?'0.0.0.0':'127.0.0.1',()=>console.log(`VT.AI Studio: ${publicOrigin||(!hosted?`http://127.0.0.1:${port}`:'aguardando domínio Railway')}${auth.setupRequired()?' | Crie o administrador com VT_AI_SETUP_CODE.':''}`));
  server.on('error',error=>{console.error(error.code==='EADDRINUSE'?'O VT.AI já está aberto na porta 4173.':'Não foi possível iniciar o servidor: '+error.code);process.exitCode=1});
 }

@@ -24,7 +24,7 @@ Uma opção é um serviço Node.js com HTTPS e volume persistente, como o Railwa
 
 1. Conecte o repositório GitHub ao serviço Node.js. Use `npm start` ou `node server.mjs` como comando de início, com Node 22.5+.
 2. Crie um volume persistente e monte-o em `/data`. Defina `VT_AI_DATA_DIR=/data/vt-ai`. Sem esse volume, contas e artes desaparecerão em reinicializações ou novos deploys.
-3. Configure as variáveis privadas do serviço: `OPENAI_API_KEY`, `VT_AI_SETUP_CODE` (novo código aleatório) e `VT_AI_PUBLIC_ORIGIN` com a URL HTTPS exata da aplicação, por exemplo `https://sua-vt-ai.up.railway.app`. Não inclua barra final, caminho ou credenciais. Não ponha esses valores no GitHub.
+3. Configure as variáveis privadas do serviço: `OPENAI_API_KEY` e `VT_AI_SETUP_CODE` (novo código aleatório). Não ponha esses valores no GitHub. O domínio Railway é lido automaticamente de `RAILWAY_PUBLIC_DOMAIN`; para um domínio próprio, defina `VT_AI_PUBLIC_ORIGIN` com a URL HTTPS exata, sem barra final ou caminho.
 4. Gere um domínio HTTPS no painel. Configure `/api/health` como health check. Abra a URL, crie a conta administradora e envie convites individuais.
 5. Ative backup do volume e mantenha uma cópia separada. O botão interno de backup copia somente o SQLite, não as imagens. Revise periodicamente o consumo de créditos da API OpenAI. Testadores têm limite inicial de 3 artes concluídas por 24 horas (`VT_AI_DAILY_IMAGE_LIMIT` pode alterá-lo); o administrador não tem esse limite.
 
@@ -35,7 +35,7 @@ O banco local do Windows **não é enviado automaticamente** ao servidor online.
 - A chave OpenAI fica no servidor. Senhas são derivadas com `scrypt`; sessões usam cookie HttpOnly, SameSite=Lax e Secure quando `VT_AI_PUBLIC_ORIGIN` está configurada.
 - Marcas, campanhas, peças, histórico, revisões, feedback e arquivos gerados são separados por conta. Apenas o administrador cria convites e backups.
 - Não existe recuperação automática de senha por e-mail nesta versão: guarde a senha administradora. Um participante que perder a senha precisa de ajuda manual do administrador; não envie senhas pelo chat.
-- Hospedagem pública exige HTTPS. Sem `VT_AI_PUBLIC_ORIGIN`, o servidor permanece acessível apenas em `127.0.0.1`.
+- Hospedagem pública exige HTTPS. Fora do Railway, sem `VT_AI_PUBLIC_ORIGIN`, o servidor permanece acessível apenas em `127.0.0.1`.
 - A chave API que já tenha sido compartilhada em conversa deve ser revogada e substituída antes de publicar o beta.
 
 Referências de hospedagem: [deploy Node.js e domínio Railway](https://docs.railway.com/guides/deploy-node-express-api-with-auto-scaling-secrets-and-zero-downtime), [volumes e backup Railway](https://docs.railway.com/volumes/backups).
