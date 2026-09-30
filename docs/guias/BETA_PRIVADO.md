@@ -20,7 +20,7 @@ Rodar no computador permite testar o login, mas `127.0.0.1` só funciona no pró
 
 ## Beta gratuito pelo Cloudflare Tunnel
 
-Para uma rodada curta com amigos, abra **VT.AI Studio - Beta Cloudflare** na área de trabalho ou `iniciar-beta-cloudflare.bat` nesta pasta. O iniciador usa o `cloudflared.exe` instalado em `%LOCALAPPDATA%\VT-AI-Studio`, abre um túnel HTTPS temporário, inicia o servidor com cookies seguros e mostra o link público quando a verificação de saúde passar. O banco SQLite e as artes continuam no seu computador.
+Para uma rodada curta com amigos, abra **VT.AI Studio - Beta Cloudflare** na área de trabalho ou `iniciar-beta-cloudflare.bat` na raiz do projeto. O iniciador usa o `cloudflared.exe` instalado em `%LOCALAPPDATA%\VT-AI-Studio`, abre um túnel HTTPS temporário, inicia o servidor com cookies seguros e mostra o link público quando a verificação de saúde passar. O banco SQLite e as artes continuam no seu computador.
 
 1. Na primeira abertura, veja o código de instalação executando no PowerShell: `[Environment]::GetEnvironmentVariable('VT_AI_SETUP_CODE','User')`. Não envie esse código aos amigos. Abra o link do túnel e crie a conta administradora com uma senha exclusiva de pelo menos 12 caracteres.
 2. Em **Configurações → Conta e convites**, gere um convite individual para cada amigo. Envie a URL pública e o código de convite por mensagem privada. Cada amigo usa **Recebi um convite** e cria a própria conta.

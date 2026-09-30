@@ -57,4 +57,4 @@ Quando uma decisão sua mudar o comportamento do sistema, registre-a no cliente 
 
 ## Uso neste pacote de construção
 
-Leia primeiro `../00_COMECE_AQUI.md`. Esta cópia inclui os 14 módulos e os originais locais no manifesto. A implementação de artes é o núcleo; vídeo/áudio são extensões. O histórico e os limites da pesquisa estão em `../06_PROVENIENCIA_E_AJUSTES.md`.
+Para consultar a especificação histórica, leia `../docs/especificacao/00_COMECE_AQUI.md`. Esta cópia inclui os 14 módulos e os originais locais no manifesto. A implementação de artes é o núcleo; vídeo/áudio são extensões. O histórico e os limites da pesquisa estão em `../docs/especificacao/06_PROVENIENCIA_E_AJUSTES.md`.

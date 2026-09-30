@@ -22,14 +22,14 @@ Aplicativo para criação de artes de redes sociais com IA. Descreva o que preci
 
 ## Como executar no Windows
 
-Requer Node.js 22.5 ou superior e uma chave da API OpenAI para gerar imagens. Salve a chave como variável de ambiente `OPENAI_API_KEY` do usuário. Configure também `VT_AI_SETUP_CODE` com um código aleatório de pelo menos 20 caracteres para criar a primeira conta administradora. Abra `start-vt-ai-studio.bat`: o aplicativo abre em `http://127.0.0.1:4173/`. Confira o passo a passo em [BETA_PRIVADO.md](BETA_PRIVADO.md).
+Requer Node.js 22.5 ou superior e uma chave da API OpenAI para gerar imagens. Salve a chave como variável de ambiente `OPENAI_API_KEY` do usuário. Configure também `VT_AI_SETUP_CODE` com um código aleatório de pelo menos 20 caracteres para criar a primeira conta administradora. Abra `start-vt-ai-studio.bat`: o aplicativo abre em `http://127.0.0.1:4173/`. Confira o passo a passo no [guia do beta privado](docs/guias/BETA_PRIVADO.md).
 
 Planejamento e revisão usam GPT-5 mini; imagens usam GPT Image 2 em qualidade alta. Essas operações consomem créditos. A chave é lida somente no servidor; não deve ser colocada em arquivos do projeto nem em commits. Pedido, perfil selecionado, orientação relevante e anexos usados são enviados à OpenAI. Feedback não treina o modelo automaticamente.
 
-Veja [LEIA_ME_USUARIO.md](LEIA_ME_USUARIO.md) para instruções de uso. O diretório `dados-vt-ai/`, que contém o banco de dados e as artes, fica fora do Git. Para hospedar, monte um volume persistente e aponte `VT_AI_DATA_DIR` para ele; não use o disco efêmero do serviço.
+Veja o [guia do usuário](docs/guias/LEIA_ME_USUARIO.md) para instruções de uso e o [índice da documentação](docs/README.md) para localizar especificações, pesquisas e validações. O diretório `dados-vt-ai/`, que contém o banco de dados e as artes, fica fora do Git. Para hospedar, monte um volume persistente e aponte `VT_AI_DATA_DIR` para ele; não use o disco efêmero do serviço.
 
 ## Verificação e limites
 
-Execute `node --test tests/*.test.mjs` (ou `npm test`, se npm estiver instalado). Testes usam SQLite temporário e API simulada, sem anexos de clientes ou cobrança. Resultados em [verificacao/INTUICAO_1_1.md](verificacao/INTUICAO_1_1.md).
+Execute `node --test tests/*.test.mjs` (ou `npm test`, se npm estiver instalado). Testes usam SQLite temporário e API simulada, sem anexos de clientes ou cobrança. Resultados históricos em [INTUICAO_1_1.md](docs/validacao/INTUICAO_1_1.md).
 
-Imagens continuam rasterizadas: edição por IA e máscara não equivalem a camadas PSD nem garantem preservação pixel a pixel. O benchmark visual e humano em `pesquisas/` ainda não foi executado; não prometemos resultados indistinguíveis de trabalho humano.
+Imagens continuam rasterizadas: edição por IA e máscara não equivalem a camadas PSD nem garantem preservação pixel a pixel. O benchmark visual e humano em `docs/pesquisas/` ainda não foi executado; não prometemos resultados indistinguíveis de trabalho humano.

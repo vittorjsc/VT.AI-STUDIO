@@ -1,13 +1,15 @@
-"""Verifica a referência documental e SQL. Não testa um aplicativo ainda inexistente.
-Executar: python verificacao/verificar_referencia.py
+"""Verifica a referência documental e SQL do pacote original.
+Executar: python docs/validacao/verificar_referencia.py
 """
 from pathlib import Path
 import hashlib
 import json
 import sqlite3
+import sys
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 checks = []
+missing = []
 
 
 def check(name, condition):
@@ -33,10 +35,15 @@ for entry in manifest['documents']:
 check('12 originais listados', len(manifest['internal_sources']) == 12)
 for entry in manifest['internal_sources']:
     path = safe_path(ROOT / 'conhecimento', entry['path'])
+    if not path.is_file():
+        missing.append(str(path.relative_to(ROOT)))
+        continue
     check('original íntegro: ' + path.name,
           hashlib.sha256(path.read_bytes()).hexdigest() == entry['sha256'])
 
-for path in ROOT.rglob('*.json'):
+json_files = list((ROOT / 'conhecimento').glob('*.json')) + list((ROOT / 'exemplos').glob('*.json')) + list((ROOT / 'docs/pesquisas').glob('*.json'))
+json_files.append(ROOT / 'docs/especificacao/inventario.json')
+for path in json_files:
     json.loads(path.read_text(encoding='utf-8'))
 check('JSONs válidos', True)
 
@@ -82,12 +89,18 @@ check('integridade SQLite', db.execute('PRAGMA integrity_check').fetchone()[0] =
 check('integridade de foreign keys', db.execute('PRAGMA foreign_key_check').fetchall() == [])
 db.close()
 
-inventory_path = ROOT / 'inventario.json'
+inventory_path = ROOT / 'docs/especificacao/inventario.json'
 if inventory_path.exists():
     inventory = json.loads(inventory_path.read_text(encoding='utf-8'))
     for item in inventory['files']:
         path = safe_path(ROOT, item['path'])
+        if not path.is_file():
+            if item['path'] not in missing:
+                missing.append(item['path'])
+            continue
         data = path.read_bytes()
         check('integridade: ' + item['path'], len(data) == item['bytes'] and hashlib.sha256(data).hexdigest() == item['sha256'])
 
-print(json.dumps({'status': 'OK', 'checks_passed': len(checks), 'scope': 'Pacote e SQL de referência; aplicativo ainda não implementado.', 'checks': checks}, ensure_ascii=False, indent=2))
+print(json.dumps({'status': 'PARCIAL' if missing else 'OK', 'checks_passed': len(checks), 'scope': 'Pacote histórico e SQL de referência; não valida o aplicativo atual.', 'missing': missing, 'checks': checks}, ensure_ascii=False, indent=2))
+if missing:
+    sys.exit(2)

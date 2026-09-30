@@ -5,37 +5,37 @@
   "excludes_self": true,
   "files": [
     {
-      "path": "00_COMECE_AQUI.md",
-      "bytes": 2789,
-      "sha256": "81d43964ae14a6e93d60bcc70065cedea515e853c8e92259a2b7506b59e0e8ff"
+      "path": "docs/especificacao/00_COMECE_AQUI.md",
+      "bytes": 2816,
+      "sha256": "3e21bd76114b699d951cbc4c445218d330e62aa11650b4c23cfadffa54b34509"
     },
     {
-      "path": "01_PROMPT_PARA_CODEX.md",
+      "path": "docs/especificacao/01_PROMPT_PARA_CODEX.md",
       "bytes": 5137,
       "sha256": "841ff39f40a1560555302373d988350ce5880d6f5c590245b860a1de5f9e965c"
     },
     {
-      "path": "02_ESCOPO_E_TELAS.md",
+      "path": "docs/especificacao/02_ESCOPO_E_TELAS.md",
       "bytes": 5191,
       "sha256": "1477b27fe8f52a9a2cb78395c1a528763b6c22644b79b51db26c658a1d9457c2"
     },
     {
-      "path": "03_ARQUITETURA_E_DADOS.md",
+      "path": "docs/especificacao/03_ARQUITETURA_E_DADOS.md",
       "bytes": 5309,
       "sha256": "b7a9df1d27627d8c38d575e5dfff97100db08b7e73b6b898496bed62b63a3813"
     },
     {
-      "path": "04_CRITERIOS_DE_ACEITE.md",
+      "path": "docs/especificacao/04_CRITERIOS_DE_ACEITE.md",
       "bytes": 3532,
       "sha256": "7923b8674eedfb0c6cc2b26272656263110d1f032a03103f4d8fd233f4a014c4"
     },
     {
-      "path": "05_ORDEM_DE_IMPLEMENTACAO.md",
+      "path": "docs/especificacao/05_ORDEM_DE_IMPLEMENTACAO.md",
       "bytes": 2242,
       "sha256": "31e36722191464dfd34bdcb397f00dc2ed9b0516c1019363d82349215b13b159"
     },
     {
-      "path": "06_PROVENIENCIA_E_AJUSTES.md",
+      "path": "docs/especificacao/06_PROVENIENCIA_E_AJUSTES.md",
       "bytes": 2692,
       "sha256": "8fe1d63681212cd2a2733c8fc976f1313f9877227150e562d8f7f88ce1d6ec85"
     },
@@ -121,8 +121,8 @@
     },
     {
       "path": "conhecimento/README.md",
-      "bytes": 3854,
-      "sha256": "c1a4966747b0503aba8d9f0fea70a79de767af7851a8cab953ef52f702221ec3"
+      "bytes": 3927,
+      "sha256": "c8936290436ae2430527fff96fb65ceccce3b8ef9206a030dc938b13bc7e8277"
     },
     {
       "path": "exemplos/cliente_e_lote.json",
@@ -210,14 +210,14 @@
       "sha256": "b034762fdc94a02784e4ce62324258f9027837bd072ca039848b54da6b13e10b"
     },
     {
-      "path": "verificacao/RESULTADO.md",
-      "bytes": 1489,
-      "sha256": "93c9ed3119f3362abe9fe6dc86de8f4cf99cb1367d69fdd66776ed45c5a9b49e"
+      "path": "docs/validacao/RESULTADO.md",
+      "bytes": 1436,
+      "sha256": "ff630c8a58538d3e129cf9e5446abb36e9dfdf0eaaac07b77a116be4e7562b47"
     },
     {
-      "path": "verificacao/verificar_referencia.py",
-      "bytes": 5245,
-      "sha256": "95ed06481afd2223078dc07f0a8f5777ca615670083047b819d4a8f2c9ed6b5b"
+      "path": "docs/validacao/verificar_referencia.py",
+      "bytes": 5787,
+      "sha256": "c98a569765533c83d6322d27d0001eda2f2f1471f58efd7e4922fc175227696c"
     }
   ]
 }

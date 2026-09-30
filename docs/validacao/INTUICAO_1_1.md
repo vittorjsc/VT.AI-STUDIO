@@ -24,12 +24,12 @@ Rascunho persistente, limite de uploads concorrentes, estado de processamento, p
 
 A inspeção visual no navegador não foi autorizada. Testes de HTML/JS não substituem revisão de screenshots ou acessibilidade completa.
 
-O benchmark visual de 24 casos em `pesquisas/` continua proposto, não executado. Não há medição de preferência humana, naturalidade ou fidelidade em gerações reais depois desta atualização. Melhorias de fluxo/política não provam quantitativamente melhoria estética nem garantem resultados indistinguíveis de humanos.
+O benchmark visual de 24 casos em `docs/pesquisas/` continua proposto, não executado. Não há medição de preferência humana, naturalidade ou fidelidade em gerações reais depois desta atualização. Melhorias de fluxo/política não provam quantitativamente melhoria estética nem garantem resultados indistinguíveis de humanos.
 
 Imagens são rasterizadas: sem composição determinística de logo/texto em camadas ou exportação PSD. Preservação de ativos e margens são instruções conferidas por IA, não garantias matemáticas. PNG final exportado pelo navegador em 1080×1350 ou 1080×1920; API gera em dimensões compatíveis com incremento de 16 px. Arte antiga sem anexos preservados não ganha comparação fiel retroativa.
 
 ## Fontes e próximos testes
 
-Pesquisa em `pesquisas/2026-09-29_diagnostico_e_plano_VTAI.md` e documentação oficial: [Image prompting](https://developers.openai.com/api/docs/guides/image-prompting), [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [GPT Image 2](https://developers.openai.com/api/docs/models/gpt-image-2).
+Pesquisa em `docs/pesquisas/2026-09-29_diagnostico_e_plano_VTAI.md` e documentação oficial: [Image prompting](https://developers.openai.com/api/docs/guides/image-prompting), [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [GPT Image 2](https://developers.openai.com/api/docs/models/gpt-image-2).
 
 Próxima avaliação: comparar resultados reais com amostra anterior, usando ativos autorizados e orçamento definido; conferir cegamente texto, identidade, clareza, naturalidade e aceitação. Não ajustar a política usando casos reservados como exemplos.

@@ -24,7 +24,7 @@ Não é necessário reenviar a conversa anterior. Os arquivos de referência est
 | `conhecimento/` | 14 módulos consolidados, introdução, manifesto JSON e SQL de referência |
 | `originais/` | 10 Markdown de conhecimento, 1 PDF de referências e instruções originais da VT.AI |
 | `exemplos/` | Cliente e lote fictícios, estrutura de template e regras de validação |
-| `verificacao/` | Verificação do SQL e da integridade do pacote |
+| `docs/validacao/` | Verificação do SQL e da integridade do pacote histórico |
 | `inventario.json` | Lista de arquivos, tamanhos e hashes para conferir integridade |
 
 ## Prioridades já definidas
@@ -38,6 +38,6 @@ Não é necessário reenviar a conversa anterior. Os arquivos de referência est
 
 ## Como interpretar as instruções
 
-Os documentos numerados na raiz definem o pedido de construção. Os documentos da VT.AI definem o comportamento criativo a implementar. Uma frase como “peça aprovação antes de produzir” regula a criação de artes dentro do aplicativo; ela não exige aprovar cada etapa de programação.
+Os documentos numerados nesta pasta definem o pedido original de construção. Os documentos da VT.AI definem o comportamento criativo a implementar. Uma frase como “peça aprovação antes de produzir” regula a criação de artes dentro do aplicativo; ela não exige aprovar cada etapa de programação.
 
 Este pacote contém documentação, dados de exemplo e um esquema de referência. Ele não contém o aplicativo pronto, modelos de IA baixados ou uma base de clientes reais. O PDF de referências representa a maior parte do tamanho do ZIP.

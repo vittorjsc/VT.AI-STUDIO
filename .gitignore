@@ -13,6 +13,7 @@ originais/*.pdf
 node_modules/
 *.log
 npm-debug.log*
+devoteca/
 
 # Arquivos do sistema/editor
 .DS_Store

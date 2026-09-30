@@ -36,4 +36,4 @@ Comparar com os ativos originais e com a versão anterior em edições. Texto er
 
 Síntese operacional própria da pesquisa de 29/09/2026. Integra interpretação, planejamento estruturado e revisão; não atualiza os pesos do modelo. Feedback fica local e só vira preferência de marca por decisão explícita do usuário. Comparação humana e benchmark pagos continuam necessários para medir qualidade, não apenas funcionamento.
 
-Referências técnicas: [Image prompting](https://developers.openai.com/api/docs/guides/image-prompting), [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs). Pesquisa completa e protocolo de avaliação em `pesquisas/`.
+Referências técnicas: [Image prompting](https://developers.openai.com/api/docs/guides/image-prompting), [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs). Pesquisa completa e protocolo de avaliação em `docs/pesquisas/`.

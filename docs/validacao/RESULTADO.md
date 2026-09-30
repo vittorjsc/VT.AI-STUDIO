@@ -19,6 +19,6 @@ Data: 15/09/2026. Resultado: aprovado para uso como referência de construção.
 
 ## Alcance
 
-Essas verificações cobrem o pacote e o SQL de referência. Não demonstram o funcionamento de um aplicativo, renderer, IA, backup ou isolamento implementado em uma API: esses componentes serão construídos e testados pelos critérios de aceite da raiz.
+Essas verificações cobrem o pacote histórico e o SQL de referência. Não demonstram o funcionamento do aplicativo atual; para ele, execute `node --test tests/*.test.mjs` a partir da raiz do projeto.
 
 O arquivo `verificar_referencia.py` permite repetir a verificação com Python e SQLite FTS5 disponíveis. Ele opera em memória e lê os arquivos do pacote; não cria nem altera dados de clientes.
